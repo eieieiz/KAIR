@@ -16,6 +16,8 @@ from utils import utils_option as option
 from data.select_dataset import define_Dataset
 from models.select_model import define_Model
 
+from tqdm import trange
+
 
 '''
 # --------------------------------------------
@@ -130,7 +132,7 @@ def main(json_path='options/train_usrnet.json'):
     # ----------------------------------------
     '''
 
-    for epoch in range(100000):  # keep running
+    for epoch in trange(5000):  # keep running
         for i, train_data in enumerate(train_loader):
 
             current_step += 1
