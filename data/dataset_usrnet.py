@@ -27,7 +27,7 @@ class DatasetUSRNet(data.Dataset):
         self.patch_size = self.opt['H_size'] if self.opt['H_size'] else 96
         self.sigma_max = self.opt['sigma_max'] if self.opt['sigma_max'] is not None else 25
         self.scales = opt['scales'] if opt['scales'] is not None else [1,2,3,4]
-        self.sf_validation = opt['sf_validation'] if opt['sf_validation'] is not None else 3
+        self.sf_validation = opt['sf_validation'] if opt['sf_validation'] is not None else 1 # need to figure out why
         #self.kernels = hdf5storage.loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']
         self.kernels = loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']  # for validation
 
