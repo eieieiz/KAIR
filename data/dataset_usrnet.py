@@ -113,6 +113,8 @@ class DatasetUSRNet(data.Dataset):
         img_H, img_L = util.uint2tensor3(img_H), util.single2tensor3(img_L)
         noise_level = torch.FloatTensor([noise_level]).view([1,1,1])
 
+        self.sf = 1 # NOTICE # FIXME
+
         return {'L': img_L, 'H': img_H, 'k': k, 'sigma': noise_level, 'sf': self.sf, 'L_path': L_path, 'H_path': H_path}
 
     def __len__(self):
