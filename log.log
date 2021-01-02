@@ -1,0 +1,321 @@
+nohup: 忽略输入
+21-01-02 12:30:47.493 :   task: usrnet
+  model: plain4
+  gpu_ids: [0]
+  scale: 1
+  n_channels: 3
+  merge_bn: False
+  merge_bn_startpoint: 300000
+  datasets:[
+    train:[
+      name: train_dataset
+      dataset_type: usrnet
+      dataroot_H: trainsets/trainH
+      dataroot_L: None
+      H_size: 96
+      use_flip: True
+      use_rot: True
+      scales: [1]
+      dataloader_shuffle: True
+      dataloader_num_workers: 8
+      dataloader_batch_size: 48
+      phase: train
+      scale: 1
+      n_channels: 3
+    ]
+    test:[
+      name: test_dataset
+      dataset_type: usrnet
+      dataroot_H: testsets/set5
+      dataroot_L: None
+      phase: test
+      scale: 1
+      n_channels: 3
+    ]
+  ]
+  path:[
+    root: SR
+    pretrained_netG: SR/usrnet/models/5000_G.pth
+    task: SR/usrnet
+    log: SR/usrnet
+    options: SR/usrnet/options
+    models: SR/usrnet/models
+    images: SR/usrnet/images
+  ]
+  netG:[
+    net_type: usrnet
+    n_iter: 6
+    h_nc: 32
+    in_nc: 4
+    out_nc: 3
+    nc: [16, 32, 64, 64]
+    nb: 2
+    gc: 32
+    ng: 2
+    reduction: 16
+    act_mode: R
+    upsample_mode: convtranspose
+    downsample_mode: strideconv
+    init_type: orthogonal
+    init_bn_type: uniform
+    init_gain: 0.2
+    scale: 1
+  ]
+  train:[
+    G_lossfn_type: l1
+    G_lossfn_weight: 1.0
+    G_optimizer_type: adam
+    G_optimizer_lr: 0.0001
+    G_optimizer_wd: 0
+    G_optimizer_clipgrad: None
+    G_scheduler_type: MultiStepLR
+    G_scheduler_milestones: [100000, 200000, 300000, 400000]
+    G_scheduler_gamma: 0.5
+    G_regularizer_orthstep: None
+    G_regularizer_clipstep: None
+    checkpoint_test: 5000
+    checkpoint_save: 5000
+    checkpoint_print: 200
+  ]
+  opt_path: options/train_usrnet.json
+  is_train: True
+
+21-01-02 12:30:47.494 : Random seed: 5182
+21-01-02 12:30:48.185 : Number of train images: 800, iters: 17
+21-01-02 12:30:57.486 : 
+Networks name: USRNet
+Params number: 590332
+Net structure:
+USRNet(
+  (d): DataNet()
+  (p): ResUNet(
+    (m_head): Conv2d(4, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (m_down1): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(16, 32, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_down2): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(32, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_down3): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(64, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_body): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up3): Sequential(
+      (0): ConvTranspose2d(64, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up2): Sequential(
+      (0): ConvTranspose2d(64, 32, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up1): Sequential(
+      (0): ConvTranspose2d(32, 16, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_tail): Conv2d(16, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  )
+  (h): HyPaNet(
+    (mlp): Sequential(
+      (0): Conv2d(2, 32, kernel_size=(1, 1), stride=(1, 1))
+      (1): ReLU(inplace=True)
+      (2): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1))
+      (3): ReLU(inplace=True)
+      (4): Conv2d(32, 12, kernel_size=(1, 1), stride=(1, 1))
+      (5): Softplus(beta=1, threshold=20)
+    )
+  )
+)
+
+21-01-02 12:30:57.507 : 
+ |  mean  |  min   |  max   |  std   || shape               
+ | -0.001 | -0.105 |  0.117 |  0.041 | torch.Size([16, 4, 3, 3]) || p.m_head.weight
+ |  0.001 | -0.157 |  0.091 |  0.023 | torch.Size([16, 16, 3, 3]) || p.m_down1.0.res.0.weight
+ | -0.004 | -0.288 |  0.126 |  0.031 | torch.Size([16, 16, 3, 3]) || p.m_down1.0.res.2.weight
+ |  0.000 | -0.088 |  0.081 |  0.021 | torch.Size([16, 16, 3, 3]) || p.m_down1.1.res.0.weight
+ | -0.003 | -0.134 |  0.101 |  0.026 | torch.Size([16, 16, 3, 3]) || p.m_down1.1.res.2.weight
+ | -0.000 | -0.108 |  0.104 |  0.029 | torch.Size([32, 16, 2, 2]) || p.m_down1.2.weight
+ | -0.000 | -0.154 |  0.138 |  0.019 | torch.Size([32, 32, 3, 3]) || p.m_down2.0.res.0.weight
+ |  0.000 | -0.110 |  0.131 |  0.017 | torch.Size([32, 32, 3, 3]) || p.m_down2.0.res.2.weight
+ | -0.000 | -0.178 |  0.147 |  0.020 | torch.Size([32, 32, 3, 3]) || p.m_down2.1.res.0.weight
+ |  0.000 | -0.209 |  0.277 |  0.028 | torch.Size([32, 32, 3, 3]) || p.m_down2.1.res.2.weight
+ |  0.000 | -0.113 |  0.141 |  0.022 | torch.Size([64, 32, 2, 2]) || p.m_down2.2.weight
+ |  0.000 | -0.100 |  0.066 |  0.011 | torch.Size([64, 64, 3, 3]) || p.m_down3.0.res.0.weight
+ |  0.000 | -0.093 |  0.087 |  0.013 | torch.Size([64, 64, 3, 3]) || p.m_down3.0.res.2.weight
+ |  0.000 | -0.059 |  0.063 |  0.010 | torch.Size([64, 64, 3, 3]) || p.m_down3.1.res.0.weight
+ |  0.000 | -0.203 |  0.162 |  0.012 | torch.Size([64, 64, 3, 3]) || p.m_down3.1.res.2.weight
+ |  0.000 | -0.050 |  0.048 |  0.013 | torch.Size([64, 64, 2, 2]) || p.m_down3.2.weight
+ | -0.000 | -0.067 |  0.059 |  0.012 | torch.Size([64, 64, 3, 3]) || p.m_body.0.res.0.weight
+ | -0.000 | -0.116 |  0.104 |  0.013 | torch.Size([64, 64, 3, 3]) || p.m_body.0.res.2.weight
+ | -0.000 | -0.104 |  0.116 |  0.012 | torch.Size([64, 64, 3, 3]) || p.m_body.1.res.0.weight
+ | -0.000 | -0.106 |  0.123 |  0.012 | torch.Size([64, 64, 3, 3]) || p.m_body.1.res.2.weight
+ |  0.000 | -0.051 |  0.052 |  0.013 | torch.Size([64, 64, 2, 2]) || p.m_up3.0.weight
+ | -0.000 | -0.071 |  0.078 |  0.011 | torch.Size([64, 64, 3, 3]) || p.m_up3.1.res.0.weight
+ |  0.000 | -0.099 |  0.110 |  0.012 | torch.Size([64, 64, 3, 3]) || p.m_up3.1.res.2.weight
+ | -0.000 | -0.090 |  0.083 |  0.010 | torch.Size([64, 64, 3, 3]) || p.m_up3.2.res.0.weight
+ |  0.000 | -0.076 |  0.089 |  0.011 | torch.Size([64, 64, 3, 3]) || p.m_up3.2.res.2.weight
+ |  0.000 | -0.069 |  0.093 |  0.020 | torch.Size([64, 32, 2, 2]) || p.m_up2.0.weight
+ |  0.000 | -0.135 |  0.115 |  0.018 | torch.Size([32, 32, 3, 3]) || p.m_up2.1.res.0.weight
+ |  0.000 | -0.189 |  0.199 |  0.021 | torch.Size([32, 32, 3, 3]) || p.m_up2.1.res.2.weight
+ |  0.000 | -0.123 |  0.107 |  0.015 | torch.Size([32, 32, 3, 3]) || p.m_up2.2.res.0.weight
+ |  0.000 | -0.071 |  0.077 |  0.016 | torch.Size([32, 32, 3, 3]) || p.m_up2.2.res.2.weight
+ | -0.000 | -0.094 |  0.097 |  0.029 | torch.Size([32, 16, 2, 2]) || p.m_up1.0.weight
+ | -0.001 | -0.070 |  0.122 |  0.019 | torch.Size([16, 16, 3, 3]) || p.m_up1.1.res.0.weight
+ |  0.000 | -0.160 |  0.178 |  0.028 | torch.Size([16, 16, 3, 3]) || p.m_up1.1.res.2.weight
+ | -0.001 | -0.116 |  0.074 |  0.021 | torch.Size([16, 16, 3, 3]) || p.m_up1.2.res.0.weight
+ |  0.001 | -0.124 |  0.136 |  0.026 | torch.Size([16, 16, 3, 3]) || p.m_up1.2.res.2.weight
+ |  0.001 | -0.087 |  0.072 |  0.028 | torch.Size([3, 16, 3, 3]) || p.m_tail.weight
+ | -0.021 | -0.330 |  0.227 |  0.155 | torch.Size([32, 2, 1, 1]) || h.mlp.0.weight
+ |  0.066 | -0.008 |  0.188 |  0.078 | torch.Size([32]) || h.mlp.0.bias
+ |  0.021 | -0.108 |  0.271 |  0.070 | torch.Size([32, 32, 1, 1]) || h.mlp.2.weight
+ |  0.029 | -0.005 |  0.156 |  0.053 | torch.Size([32]) || h.mlp.2.bias
+ | -0.021 | -0.497 |  0.179 |  0.091 | torch.Size([12, 32, 1, 1]) || h.mlp.4.weight
+ | -0.033 | -0.345 |  0.063 |  0.115 | torch.Size([12]) || h.mlp.4.bias
+
+  0%|          | 0/5000 [00:00<?, ?it/s]export CUDA_VISIBLE_DEVICES=0
+LogHandlers setup!
+Dataset [DatasetUSRNet - train_dataset] is created.
+Dataset [DatasetUSRNet - test_dataset] is created.
+Initialization method [orthogonal + uniform], gain is [0.20]
+Training model [ModelPlain4] is created.
+Loading model for G [SR/usrnet/models/5000_G.pth] ...
+/home/renyumeng/.conda/envs/pytorch/lib/python3.6/site-packages/torch/optim/lr_scheduler.py:136: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  "https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate", UserWarning)
+/home/renyumeng/.conda/envs/pytorch/lib/python3.6/site-packages/torch/optim/lr_scheduler.py:156: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+/home/renyumeng/workspace/KAIR/models/network_usrnet.py:148: UserWarning: The function torch.rfft is deprecated and will be removed in a future PyTorch release. Use the new torch.fft module functions, instead, by importing torch.fft and calling torch.fft.fft or torch.fft.rfft. (Triggered internally at  /opt/conda/conda-bld/pytorch_1607370193460/work/aten/src/ATen/native/SpectralOps.cpp:590.)
+  otf = torch.rfft(otf, 2, onesided=False)
+/home/renyumeng/workspace/KAIR/models/network_usrnet.py:273: UserWarning: The function torch.irfft is deprecated and will be removed in a future PyTorch release. Use the new torch.fft module functions, instead, by importing torch.fft and calling torch.fft.ifft or torch.fft.irfft. (Triggered internally at  /opt/conda/conda-bld/pytorch_1607370193460/work/aten/src/ATen/native/SpectralOps.cpp:602.)
+  Xest = torch.irfft(FX, 2, onesided=False)
+  0%|          | 1/5000 [00:48<67:33:09, 48.65s/it]  0%|          | 2/5000 [01:41<70:59:14, 51.13s/it]  0%|          | 3/5000 [02:27<67:51:53, 48.89s/it]  0%|          | 4/5000 [03:16<67:45:55, 48.83s/it]  0%|          | 5/5000 [04:01<65:37:48, 47.30s/it]  0%|          | 6/5000 [04:49<66:05:48, 47.65s/it]  0%|          | 7/5000 [05:32<64:12:50, 46.30s/it]  0%|          | 8/5000 [06:19<64:18:07, 46.37s/it]  0%|          | 9/5000 [07:09<65:49:36, 47.48s/it]  0%|          | 10/5000 [07:59<67:07:51, 48.43s/it]  0%|          | 11/5000 [08:50<67:59:10, 49.06s/it]  0%|          | 12/5000 [09:42<69:07:53, 49.89s/it]/home/renyumeng/.conda/envs/pytorch/lib/python3.6/site-packages/torch/optim/lr_scheduler.py:417: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  "please use `get_last_lr()`.", UserWarning)
+21-01-02 12:41:06.085 : <epoch: 12, iter:   5,200, lr:1.000e-04> G_loss: 3.436e-02 
+  0%|          | 13/5000 [10:29<68:13:46, 49.25s/it]  0%|          | 14/5000 [11:17<67:21:00, 48.63s/it]  0%|          | 15/5000 [12:07<68:01:42, 49.13s/it]  0%|          | 16/5000 [12:57<68:22:16, 49.39s/it]  0%|          | 17/5000 [13:46<68:09:16, 49.24s/it]  0%|          | 18/5000 [14:33<67:14:14, 48.59s/it]  0%|          | 19/5000 [15:21<67:10:40, 48.55s/it]  0%|          | 20/5000 [16:10<67:04:01, 48.48s/it]  0%|          | 21/5000 [16:57<66:28:15, 48.06s/it]  0%|          | 22/5000 [17:46<66:52:30, 48.36s/it]  0%|          | 23/5000 [18:35<67:03:02, 48.50s/it]  0%|          | 24/5000 [19:24<67:12:24, 48.62s/it]21-01-02 12:51:14.774 : <epoch: 24, iter:   5,400, lr:1.000e-04> G_loss: 3.186e-02 
+  0%|          | 25/5000 [20:17<69:09:06, 50.04s/it]  1%|          | 26/5000 [21:08<69:24:38, 50.24s/it]  1%|          | 27/5000 [21:55<68:14:33, 49.40s/it]  1%|          | 28/5000 [22:46<68:55:04, 49.90s/it]  1%|          | 29/5000 [23:34<68:08:13, 49.34s/it]  1%|          | 30/5000 [24:24<68:21:04, 49.51s/it]  1%|          | 31/5000 [25:15<68:47:06, 49.83s/it]  1%|          | 32/5000 [26:04<68:42:53, 49.79s/it]  1%|          | 33/5000 [26:53<68:05:44, 49.35s/it]  1%|          | 34/5000 [27:39<67:01:21, 48.59s/it]  1%|          | 35/5000 [28:29<67:20:53, 48.83s/it]  1%|          | 36/5000 [29:17<67:03:43, 48.63s/it]  1%|          | 37/5000 [30:04<66:29:51, 48.24s/it]21-01-02 13:01:31.966 : <epoch: 37, iter:   5,600, lr:1.000e-04> G_loss: 3.190e-02 
+  1%|          | 38/5000 [30:55<67:18:23, 48.83s/it]  1%|          | 39/5000 [31:47<68:39:42, 49.83s/it]  1%|          | 40/5000 [32:35<67:53:02, 49.27s/it]  1%|          | 41/5000 [33:24<67:57:08, 49.33s/it]  1%|          | 42/5000 [34:09<65:59:50, 47.92s/it]  1%|          | 43/5000 [34:58<66:20:02, 48.17s/it]  1%|          | 44/5000 [35:48<67:23:34, 48.95s/it]  1%|          | 45/5000 [36:35<66:26:08, 48.27s/it]  1%|          | 46/5000 [37:26<67:29:03, 49.04s/it]  1%|          | 47/5000 [38:16<67:57:58, 49.40s/it]  1%|          | 48/5000 [39:03<66:55:08, 48.65s/it]  1%|          | 49/5000 [39:52<67:04:41, 48.77s/it]21-01-02 13:11:40.411 : <epoch: 49, iter:   5,800, lr:1.000e-04> G_loss: 4.112e-02 
+  1%|          | 50/5000 [40:43<67:48:41, 49.32s/it]  1%|          | 51/5000 [41:32<67:39:44, 49.22s/it]  1%|          | 52/5000 [42:15<65:20:53, 47.55s/it]  1%|          | 53/5000 [43:02<65:00:57, 47.31s/it]  1%|          | 54/5000 [43:49<64:46:05, 47.14s/it]  1%|          | 55/5000 [44:38<65:27:57, 47.66s/it]  1%|          | 56/5000 [45:26<65:51:47, 47.96s/it]  1%|          | 57/5000 [46:16<66:42:56, 48.59s/it]  1%|          | 58/5000 [47:09<68:19:29, 49.77s/it]  1%|          | 59/5000 [48:00<68:49:55, 50.15s/it]  1%|          | 60/5000 [48:50<68:51:31, 50.18s/it]  1%|          | 61/5000 [49:39<68:28:03, 49.91s/it]  1%|          | 62/5000 [50:28<67:43:19, 49.37s/it]21-01-02 13:21:53.305 : <epoch: 62, iter:   6,000, lr:1.000e-04> G_loss: 3.289e-02 
+  1%|▏         | 63/5000 [51:17<67:31:57, 49.24s/it]  1%|▏         | 64/5000 [51:57<63:58:18, 46.66s/it]  1%|▏         | 65/5000 [52:42<63:19:44, 46.20s/it]  1%|▏         | 66/5000 [53:27<62:54:21, 45.90s/it]  1%|▏         | 67/5000 [54:14<63:06:26, 46.05s/it]  1%|▏         | 68/5000 [55:01<63:34:34, 46.41s/it]  1%|▏         | 69/5000 [55:51<65:10:24, 47.58s/it]  1%|▏         | 70/5000 [56:41<65:47:59, 48.05s/it]  1%|▏         | 71/5000 [57:29<66:06:08, 48.28s/it]  1%|▏         | 72/5000 [58:18<66:24:49, 48.52s/it]  1%|▏         | 73/5000 [59:08<66:38:12, 48.69s/it]  1%|▏         | 74/5000 [59:55<65:59:45, 48.23s/it]21-01-02 13:31:43.361 : <epoch: 74, iter:   6,200, lr:1.000e-04> G_loss: 3.359e-02 
+  2%|▏         | 75/5000 [1:00:46<67:05:49, 49.05s/it]  2%|▏         | 76/5000 [1:01:35<67:11:50, 49.13s/it]  2%|▏         | 77/5000 [1:02:27<68:31:22, 50.11s/it]  2%|▏         | 78/5000 [1:03:15<67:21:53, 49.27s/it]  2%|▏         | 79/5000 [1:04:05<67:39:19, 49.49s/it]  2%|▏         | 80/5000 [1:04:53<67:17:53, 49.24s/it]  2%|▏         | 81/5000 [1:05:42<67:03:17, 49.07s/it]  2%|▏         | 82/5000 [1:06:31<66:53:59, 48.97s/it]  2%|▏         | 83/5000 [1:07:18<66:01:18, 48.34s/it]  2%|▏         | 84/5000 [1:08:06<66:02:46, 48.37s/it]  2%|▏         | 85/5000 [1:08:53<65:28:56, 47.96s/it]  2%|▏         | 86/5000 [1:09:45<67:07:47, 49.18s/it]  2%|▏         | 87/5000 [1:10:36<67:47:57, 49.68s/it]21-01-02 13:42:06.733 : <epoch: 87, iter:   6,400, lr:1.000e-04> G_loss: 4.446e-02 
+  2%|▏         | 88/5000 [1:11:30<69:22:43, 50.85s/it]  2%|▏         | 89/5000 [1:12:18<68:16:19, 50.05s/it]  2%|▏         | 90/5000 [1:13:07<68:08:39, 49.96s/it]  2%|▏         | 91/5000 [1:13:57<68:07:19, 49.96s/it]  2%|▏         | 92/5000 [1:14:44<66:55:31, 49.09s/it]  2%|▏         | 93/5000 [1:15:34<67:13:45, 49.32s/it]  2%|▏         | 94/5000 [1:16:23<66:58:24, 49.14s/it]  2%|▏         | 95/5000 [1:17:13<67:10:11, 49.30s/it]  2%|▏         | 96/5000 [1:18:00<66:19:53, 48.69s/it]  2%|▏         | 97/5000 [1:18:52<67:27:25, 49.53s/it]  2%|▏         | 98/5000 [1:19:40<67:10:26, 49.33s/it]  2%|▏         | 99/5000 [1:20:28<66:16:33, 48.68s/it]21-01-02 13:52:15.462 : <epoch: 99, iter:   6,600, lr:1.000e-04> G_loss: 2.966e-02 
+  2%|▏         | 100/5000 [1:21:18<66:49:16, 49.09s/it]  2%|▏         | 101/5000 [1:22:09<67:54:21, 49.90s/it]  2%|▏         | 102/5000 [1:22:59<67:39:31, 49.73s/it]  2%|▏         | 103/5000 [1:23:42<65:07:52, 47.88s/it]  2%|▏         | 104/5000 [1:24:29<64:37:17, 47.52s/it]  2%|▏         | 105/5000 [1:25:19<65:30:59, 48.18s/it]  2%|▏         | 106/5000 [1:26:06<65:17:47, 48.03s/it]  2%|▏         | 107/5000 [1:26:54<65:05:45, 47.89s/it]  2%|▏         | 108/5000 [1:27:41<64:41:50, 47.61s/it]  2%|▏         | 109/5000 [1:28:32<66:03:42, 48.62s/it]  2%|▏         | 110/5000 [1:29:24<67:20:47, 49.58s/it]  2%|▏         | 111/5000 [1:30:10<66:10:39, 48.73s/it]  2%|▏         | 112/5000 [1:31:01<66:57:45, 49.32s/it]21-01-02 14:02:24.779 : <epoch:112, iter:   6,800, lr:1.000e-04> G_loss: 3.238e-02 
+  2%|▏         | 113/5000 [1:31:48<65:58:25, 48.60s/it]  2%|▏         | 114/5000 [1:32:38<66:28:29, 48.98s/it]  2%|▏         | 115/5000 [1:33:27<66:25:55, 48.96s/it]  2%|▏         | 116/5000 [1:34:15<66:14:34, 48.83s/it]  2%|▏         | 117/5000 [1:35:00<64:39:19, 47.67s/it]  2%|▏         | 118/5000 [1:35:44<62:54:43, 46.39s/it]  2%|▏         | 119/5000 [1:36:31<63:11:07, 46.60s/it]  2%|▏         | 120/5000 [1:37:17<63:07:01, 46.56s/it]  2%|▏         | 121/5000 [1:38:09<65:01:39, 47.98s/it]  2%|▏         | 122/5000 [1:38:58<65:27:59, 48.31s/it]  2%|▏         | 123/5000 [1:39:48<66:07:04, 48.81s/it]  2%|▏         | 124/5000 [1:40:39<67:19:48, 49.71s/it]21-01-02 14:12:27.043 : <epoch:124, iter:   7,000, lr:1.000e-04> G_loss: 3.682e-02 
+  2%|▎         | 125/5000 [1:41:29<67:23:54, 49.77s/it]  3%|▎         | 126/5000 [1:42:21<68:04:15, 50.28s/it]  3%|▎         | 127/5000 [1:43:10<67:43:14, 50.03s/it]  3%|▎         | 128/5000 [1:43:58<66:37:37, 49.23s/it]  3%|▎         | 129/5000 [1:44:41<64:24:03, 47.60s/it]  3%|▎         | 130/5000 [1:45:27<63:44:22, 47.12s/it]  3%|▎         | 131/5000 [1:46:17<64:39:02, 47.80s/it]  3%|▎         | 132/5000 [1:47:01<63:00:27, 46.60s/it]  3%|▎         | 133/5000 [1:47:50<64:02:54, 47.38s/it]  3%|▎         | 134/5000 [1:48:35<63:01:46, 46.63s/it]  3%|▎         | 135/5000 [1:49:22<63:08:45, 46.73s/it]  3%|▎         | 136/5000 [1:50:12<64:35:26, 47.81s/it]  3%|▎         | 137/5000 [1:51:05<66:54:17, 49.53s/it]21-01-02 14:22:32.411 : <epoch:137, iter:   7,200, lr:1.000e-04> G_loss: 3.484e-02 
+  3%|▎         | 138/5000 [1:51:54<66:36:10, 49.32s/it]  3%|▎         | 139/5000 [1:52:44<66:43:52, 49.42s/it]  3%|▎         | 140/5000 [1:53:34<67:01:40, 49.65s/it]  3%|▎         | 141/5000 [1:54:23<66:30:40, 49.28s/it]  3%|▎         | 142/5000 [1:55:14<67:21:36, 49.92s/it]  3%|▎         | 143/5000 [1:56:03<66:54:58, 49.60s/it]  3%|▎         | 144/5000 [1:56:54<67:31:21, 50.06s/it]  3%|▎         | 145/5000 [1:57:47<68:37:31, 50.89s/it]  3%|▎         | 146/5000 [1:58:34<67:07:42, 49.79s/it]  3%|▎         | 147/5000 [1:59:24<67:17:13, 49.91s/it]  3%|▎         | 148/5000 [2:00:08<64:37:19, 47.95s/it]  3%|▎         | 149/5000 [2:00:57<65:07:24, 48.33s/it]21-01-02 14:32:46.159 : <epoch:149, iter:   7,400, lr:1.000e-04> G_loss: 3.303e-02 
+  3%|▎         | 150/5000 [2:01:48<66:25:23, 49.30s/it]  3%|▎         | 151/5000 [2:02:38<66:37:54, 49.47s/it]  3%|▎         | 152/5000 [2:03:27<66:29:11, 49.37s/it]  3%|▎         | 153/5000 [2:04:15<65:56:01, 48.97s/it]  3%|▎         | 154/5000 [2:05:08<67:27:25, 50.11s/it]  3%|▎         | 155/5000 [2:06:03<69:30:58, 51.65s/it]  3%|▎         | 156/5000 [2:06:53<68:39:27, 51.03s/it]  3%|▎         | 157/5000 [2:07:38<66:04:43, 49.12s/it]  3%|▎         | 158/5000 [2:08:28<66:25:36, 49.39s/it]  3%|▎         | 159/5000 [2:09:18<66:51:07, 49.71s/it]  3%|▎         | 160/5000 [2:10:10<67:36:40, 50.29s/it]  3%|▎         | 161/5000 [2:11:02<68:22:13, 50.86s/it]  3%|▎         | 162/5000 [2:11:52<68:01:11, 50.61s/it]21-01-02 14:43:16.643 : <epoch:162, iter:   7,600, lr:1.000e-04> G_loss: 3.068e-02 
+  3%|▎         | 163/5000 [2:12:40<66:51:19, 49.76s/it]  3%|▎         | 164/5000 [2:13:30<67:07:56, 49.97s/it]  3%|▎         | 165/5000 [2:14:15<65:04:04, 48.45s/it]  3%|▎         | 166/5000 [2:15:04<65:20:38, 48.66s/it]  3%|▎         | 167/5000 [2:15:53<65:27:49, 48.76s/it]  3%|▎         | 168/5000 [2:16:43<65:39:11, 48.91s/it]  3%|▎         | 169/5000 [2:17:31<65:21:52, 48.71s/it]  3%|▎         | 170/5000 [2:18:20<65:39:26, 48.94s/it]  3%|▎         | 171/5000 [2:19:09<65:39:47, 48.95s/it]  3%|▎         | 172/5000 [2:19:56<64:50:25, 48.35s/it]  3%|▎         | 173/5000 [2:20:45<64:54:47, 48.41s/it]  3%|▎         | 174/5000 [2:21:39<67:09:41, 50.10s/it]21-01-02 14:53:25.189 : <epoch:174, iter:   7,800, lr:1.000e-04> G_loss: 2.930e-02 
+  4%|▎         | 175/5000 [2:22:27<66:31:53, 49.64s/it]  4%|▎         | 176/5000 [2:23:19<67:14:16, 50.18s/it]  4%|▎         | 177/5000 [2:24:09<67:15:19, 50.20s/it]  4%|▎         | 178/5000 [2:24:57<66:15:47, 49.47s/it]  4%|▎         | 179/5000 [2:25:46<66:06:07, 49.36s/it]  4%|▎         | 180/5000 [2:26:33<65:01:02, 48.56s/it]  4%|▎         | 181/5000 [2:27:27<67:09:31, 50.17s/it]  4%|▎         | 182/5000 [2:28:13<65:30:05, 48.94s/it]  4%|▎         | 183/5000 [2:29:01<65:17:08, 48.79s/it]  4%|▎         | 184/5000 [2:29:48<64:31:12, 48.23s/it]  4%|▎         | 185/5000 [2:30:37<64:44:14, 48.40s/it]  4%|▎         | 186/5000 [2:31:22<63:37:44, 47.58s/it]  4%|▎         | 187/5000 [2:32:08<62:53:27, 47.04s/it]21-01-02 15:03:35.508 : <epoch:187, iter:   8,000, lr:1.000e-04> G_loss: 3.203e-02 
+  4%|▍         | 188/5000 [2:32:57<63:22:48, 47.42s/it]  4%|▍         | 189/5000 [2:33:45<63:57:26, 47.86s/it]  4%|▍         | 190/5000 [2:34:35<64:45:14, 48.46s/it]  4%|▍         | 191/5000 [2:35:25<65:10:16, 48.79s/it]  4%|▍         | 192/5000 [2:36:14<65:20:56, 48.93s/it]  4%|▍         | 193/5000 [2:37:03<65:20:23, 48.93s/it]  4%|▍         | 194/5000 [2:37:49<64:16:32, 48.15s/it]  4%|▍         | 195/5000 [2:38:39<64:58:09, 48.68s/it]  4%|▍         | 196/5000 [2:39:32<66:30:13, 49.84s/it]  4%|▍         | 197/5000 [2:40:22<66:49:05, 50.08s/it]  4%|▍         | 198/5000 [2:41:07<64:34:34, 48.41s/it]  4%|▍         | 199/5000 [2:41:55<64:19:23, 48.23s/it]21-01-02 15:13:42.934 : <epoch:199, iter:   8,200, lr:1.000e-04> G_loss: 3.333e-02 
+  4%|▍         | 200/5000 [2:42:45<65:09:56, 48.87s/it]  4%|▍         | 201/5000 [2:43:36<65:49:43, 49.38s/it]  4%|▍         | 202/5000 [2:44:23<64:53:29, 48.69s/it]  4%|▍         | 203/5000 [2:45:13<65:32:16, 49.18s/it]  4%|▍         | 204/5000 [2:46:03<65:38:46, 49.28s/it]  4%|▍         | 205/5000 [2:46:49<64:31:29, 48.44s/it]  4%|▍         | 206/5000 [2:47:40<65:36:04, 49.26s/it]  4%|▍         | 207/5000 [2:48:30<65:45:08, 49.39s/it]  4%|▍         | 208/5000 [2:49:18<65:00:48, 48.84s/it]  4%|▍         | 209/5000 [2:50:08<65:34:44, 49.28s/it]  4%|▍         | 210/5000 [2:50:56<65:17:02, 49.07s/it]  4%|▍         | 211/5000 [2:51:47<65:46:53, 49.45s/it]  4%|▍         | 212/5000 [2:52:37<65:59:21, 49.62s/it]21-01-02 15:24:04.850 : <epoch:212, iter:   8,400, lr:1.000e-04> G_loss: 2.834e-02 
+  4%|▍         | 213/5000 [2:53:29<66:57:37, 50.36s/it]  4%|▍         | 214/5000 [2:54:18<66:29:37, 50.02s/it]  4%|▍         | 215/5000 [2:55:05<65:13:57, 49.08s/it]  4%|▍         | 216/5000 [2:55:51<63:59:14, 48.15s/it]  4%|▍         | 217/5000 [2:56:39<64:02:15, 48.20s/it]  4%|▍         | 218/5000 [2:57:32<65:52:33, 49.59s/it]  4%|▍         | 219/5000 [2:58:21<65:44:58, 49.51s/it]  4%|▍         | 220/5000 [2:59:09<65:01:42, 48.98s/it]  4%|▍         | 221/5000 [2:59:58<64:56:39, 48.92s/it]  4%|▍         | 222/5000 [3:00:45<64:05:19, 48.29s/it]  4%|▍         | 223/5000 [3:01:32<63:46:53, 48.07s/it]  4%|▍         | 224/5000 [3:02:21<63:52:01, 48.14s/it]21-01-02 15:34:06.165 : <epoch:224, iter:   8,600, lr:1.000e-04> G_loss: 3.113e-02 
+  4%|▍         | 225/5000 [3:03:08<63:43:24, 48.04s/it]  5%|▍         | 226/5000 [3:03:56<63:28:39, 47.87s/it]  5%|▍         | 227/5000 [3:04:48<65:16:41, 49.24s/it]  5%|▍         | 228/5000 [3:05:36<64:45:28, 48.85s/it]  5%|▍         | 229/5000 [3:06:26<65:16:08, 49.25s/it]  5%|▍         | 230/5000 [3:07:17<65:53:31, 49.73s/it]  5%|▍         | 231/5000 [3:08:07<65:51:22, 49.71s/it]  5%|▍         | 232/5000 [3:08:58<66:10:14, 49.96s/it]  5%|▍         | 233/5000 [3:09:49<66:48:32, 50.45s/it]  5%|▍         | 234/5000 [3:10:37<65:53:03, 49.77s/it]  5%|▍         | 235/5000 [3:11:26<65:35:32, 49.56s/it]  5%|▍         | 236/5000 [3:12:18<66:30:10, 50.25s/it]  5%|▍         | 237/5000 [3:13:07<66:02:35, 49.92s/it]21-01-02 15:44:34.589 : <epoch:237, iter:   8,800, lr:1.000e-04> G_loss: 3.941e-02 
+  5%|▍         | 238/5000 [3:13:58<66:21:29, 50.17s/it]  5%|▍         | 239/5000 [3:14:46<65:33:43, 49.57s/it]  5%|▍         | 240/5000 [3:15:35<65:07:22, 49.25s/it]  5%|▍         | 241/5000 [3:16:24<65:16:40, 49.38s/it]  5%|▍         | 242/5000 [3:17:17<66:21:51, 50.21s/it]  5%|▍         | 243/5000 [3:18:06<66:03:35, 49.99s/it]  5%|▍         | 244/5000 [3:18:55<65:27:51, 49.55s/it]  5%|▍         | 245/5000 [3:19:44<65:32:54, 49.63s/it]  5%|▍         | 246/5000 [3:20:27<62:45:55, 47.53s/it]  5%|▍         | 247/5000 [3:21:16<63:24:12, 48.02s/it]  5%|▍         | 248/5000 [3:22:06<64:15:48, 48.68s/it]  5%|▍         | 249/5000 [3:22:55<64:14:27, 48.68s/it]21-01-02 15:54:40.350 : <epoch:249, iter:   9,000, lr:1.000e-04> G_loss: 2.964e-02 
+  5%|▌         | 250/5000 [3:23:43<63:46:34, 48.34s/it]  5%|▌         | 251/5000 [3:24:33<64:40:53, 49.03s/it]  5%|▌         | 252/5000 [3:25:25<65:53:49, 49.96s/it]  5%|▌         | 253/5000 [3:26:16<66:05:05, 50.12s/it]  5%|▌         | 254/5000 [3:27:06<65:59:32, 50.06s/it]  5%|▌         | 255/5000 [3:27:57<66:33:34, 50.50s/it]  5%|▌         | 256/5000 [3:28:51<67:40:43, 51.36s/it]  5%|▌         | 257/5000 [3:29:39<66:20:14, 50.35s/it]  5%|▌         | 258/5000 [3:30:26<65:04:31, 49.40s/it]  5%|▌         | 259/5000 [3:31:12<63:38:13, 48.32s/it]  5%|▌         | 260/5000 [3:32:01<63:57:33, 48.58s/it]  5%|▌         | 261/5000 [3:32:47<62:54:03, 47.78s/it]  5%|▌         | 262/5000 [3:33:37<63:49:29, 48.50s/it]21-01-02 16:05:04.852 : <epoch:262, iter:   9,200, lr:1.000e-04> G_loss: 3.242e-02 
+  5%|▌         | 263/5000 [3:34:29<65:18:07, 49.63s/it]  5%|▌         | 264/5000 [3:35:16<64:18:06, 48.88s/it]  5%|▌         | 265/5000 [3:36:07<64:51:24, 49.31s/it]  5%|▌         | 266/5000 [3:36:57<65:11:36, 49.58s/it]  5%|▌         | 267/5000 [3:37:49<66:10:01, 50.33s/it]  5%|▌         | 268/5000 [3:38:39<66:06:33, 50.29s/it]  5%|▌         | 269/5000 [3:39:23<63:21:48, 48.22s/it]  5%|▌         | 270/5000 [3:40:10<63:05:36, 48.02s/it]  5%|▌         | 271/5000 [3:40:59<63:19:57, 48.21s/it]  5%|▌         | 272/5000 [3:41:46<63:05:49, 48.04s/it]  5%|▌         | 273/5000 [3:42:35<63:21:37, 48.25s/it]  5%|▌         | 274/5000 [3:43:24<63:41:39, 48.52s/it]21-01-02 16:15:10.115 : <epoch:274, iter:   9,400, lr:1.000e-04> G_loss: 2.749e-02 
+  6%|▌         | 275/5000 [3:44:12<63:28:24, 48.36s/it]  6%|▌         | 276/5000 [3:45:00<63:21:22, 48.28s/it]  6%|▌         | 277/5000 [3:45:49<63:26:29, 48.36s/it]  6%|▌         | 278/5000 [3:46:40<64:32:00, 49.20s/it]  6%|▌         | 279/5000 [3:47:35<66:41:27, 50.86s/it]  6%|▌         | 280/5000 [3:48:25<66:17:37, 50.56s/it]  6%|▌         | 281/5000 [3:49:14<65:46:35, 50.18s/it]  6%|▌         | 282/5000 [3:50:09<67:37:59, 51.61s/it]  6%|▌         | 283/5000 [3:50:54<65:03:16, 49.65s/it]  6%|▌         | 284/5000 [3:51:43<64:47:09, 49.45s/it]  6%|▌         | 285/5000 [3:52:34<65:19:54, 49.88s/it]  6%|▌         | 286/5000 [3:53:23<64:59:58, 49.64s/it]  6%|▌         | 287/5000 [3:54:15<65:44:46, 50.22s/it]21-01-02 16:25:41.607 : <epoch:287, iter:   9,600, lr:1.000e-04> G_loss: 3.525e-02 
+  6%|▌         | 288/5000 [3:55:06<66:14:39, 50.61s/it]  6%|▌         | 289/5000 [3:55:56<65:58:00, 50.41s/it]  6%|▌         | 290/5000 [3:56:48<66:31:10, 50.84s/it]  6%|▌         | 291/5000 [3:57:36<65:16:24, 49.90s/it]  6%|▌         | 292/5000 [3:58:27<65:51:26, 50.36s/it]  6%|▌         | 293/5000 [3:59:15<65:02:25, 49.74s/it]  6%|▌         | 294/5000 [4:00:04<64:34:16, 49.40s/it]  6%|▌         | 295/5000 [4:00:52<64:13:46, 49.14s/it]  6%|▌         | 296/5000 [4:01:39<63:22:44, 48.50s/it]  6%|▌         | 297/5000 [4:02:28<63:30:52, 48.62s/it]  6%|▌         | 298/5000 [4:03:15<62:52:13, 48.14s/it]  6%|▌         | 299/5000 [4:04:03<62:41:09, 48.00s/it]21-01-02 16:35:51.725 : <epoch:299, iter:   9,800, lr:1.000e-04> G_loss: 2.572e-02 
+  6%|▌         | 300/5000 [4:04:54<63:47:34, 48.86s/it]  6%|▌         | 301/5000 [4:05:48<65:55:23, 50.51s/it]  6%|▌         | 302/5000 [4:06:38<65:26:14, 50.14s/it]  6%|▌         | 303/5000 [4:07:29<66:06:14, 50.67s/it]  6%|▌         | 304/5000 [4:08:19<65:34:59, 50.28s/it]  6%|▌         | 305/5000 [4:09:09<65:32:01, 50.25s/it]  6%|▌         | 306/5000 [4:10:03<66:53:58, 51.31s/it]  6%|▌         | 307/5000 [4:10:52<66:00:11, 50.63s/it]  6%|▌         | 308/5000 [4:11:41<65:17:31, 50.10s/it]  6%|▌         | 309/5000 [4:12:30<65:07:55, 49.98s/it]  6%|▌         | 310/5000 [4:13:21<65:18:08, 50.13s/it]  6%|▌         | 311/5000 [4:14:07<63:49:22, 49.00s/it]  6%|▌         | 312/5000 [4:15:00<65:16:51, 50.13s/it]21-01-02 16:46:28.223 : <epoch:312, iter:  10,000, lr:1.000e-04> G_loss: 3.337e-02 
+21-01-02 16:46:28.224 : Saving the model.
+  6%|▌         | 312/5000 [4:15:44<64:02:45, 49.18s/it]
+Traceback (most recent call last):
+  File "main_train_usrnet.py", line 221, in <module>
+    main()
+  File "main_train_usrnet.py", line 204, in main
+    current_psnr = util.calculate_psnr(E_img, H_img, border=border)
+  File "/home/renyumeng/workspace/KAIR/utils/utils_image.py", line 626, in calculate_psnr
+    raise ValueError('Input images must have the same dimensions.')
+ValueError: Input images must have the same dimensions.
