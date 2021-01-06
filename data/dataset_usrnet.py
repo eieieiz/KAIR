@@ -27,7 +27,7 @@ class DatasetUSRNet(data.Dataset):
         self.patch_size = self.opt['H_size'] if self.opt['H_size'] else 96
         self.sigma_max = self.opt['sigma_max'] if self.opt['sigma_max'] is not None else 25
         self.scales = opt['scales'] if opt['scales'] is not None else [1,2,3,4]
-        self.sf_validation = opt['sf_validation'] if opt['sf_validation'] is not None else 1 # need to figure out why
+        self.sf_validation = opt['sf_validation'] if opt['sf_validation'] is not None else 1 # need to figure out why #NOTICE #FIXME
         #self.kernels = hdf5storage.loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']
         self.kernels = loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']  # for validation
 
@@ -114,6 +114,8 @@ class DatasetUSRNet(data.Dataset):
         noise_level = torch.FloatTensor([noise_level]).view([1,1,1])
         
         self.sf=1 #NOTICE #FIXME
+
+        self.sf = 1 # NOTICE # FIXME
 
         return {'L': img_L, 'H': img_H, 'k': k, 'sigma': noise_level, 'sf': self.sf, 'L_path': L_path, 'H_path': H_path}
 
