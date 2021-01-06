@@ -586,3 +586,801 @@ USRNet(
 21-01-02 16:35:51.725 : <epoch:299, iter:   9,800, lr:1.000e-04> G_loss: 2.572e-02 
 21-01-02 16:46:28.223 : <epoch:312, iter:  10,000, lr:1.000e-04> G_loss: 3.337e-02 
 21-01-02 16:46:28.224 : Saving the model.
+21-01-03 00:21:37.489 :   task: usrnet
+  model: plain4
+  gpu_ids: [0]
+  scale: 1
+  n_channels: 3
+  merge_bn: False
+  merge_bn_startpoint: 300000
+  datasets:[
+    train:[
+      name: train_dataset
+      dataset_type: usrnet
+      dataroot_H: trainsets/trainH
+      dataroot_L: None
+      H_size: 96
+      use_flip: True
+      use_rot: True
+      scales: [1]
+      dataloader_shuffle: True
+      dataloader_num_workers: 8
+      dataloader_batch_size: 48
+      phase: train
+      scale: 1
+      n_channels: 3
+    ]
+    test:[
+      name: test_dataset
+      dataset_type: usrnet
+      dataroot_H: testsets/set5
+      dataroot_L: None
+      phase: test
+      scale: 1
+      n_channels: 3
+    ]
+  ]
+  path:[
+    root: SR
+    pretrained_netG: SR/usrnet/models/10000_G.pth
+    task: SR/usrnet
+    log: SR/usrnet
+    options: SR/usrnet/options
+    models: SR/usrnet/models
+    images: SR/usrnet/images
+  ]
+  netG:[
+    net_type: usrnet
+    n_iter: 6
+    h_nc: 32
+    in_nc: 4
+    out_nc: 3
+    nc: [16, 32, 64, 64]
+    nb: 2
+    gc: 32
+    ng: 2
+    reduction: 16
+    act_mode: R
+    upsample_mode: convtranspose
+    downsample_mode: strideconv
+    init_type: orthogonal
+    init_bn_type: uniform
+    init_gain: 0.2
+    scale: 1
+  ]
+  train:[
+    G_lossfn_type: l1
+    G_lossfn_weight: 1.0
+    G_optimizer_type: adam
+    G_optimizer_lr: 0.0001
+    G_optimizer_wd: 0
+    G_optimizer_clipgrad: None
+    G_scheduler_type: MultiStepLR
+    G_scheduler_milestones: [100000, 200000, 300000, 400000]
+    G_scheduler_gamma: 0.5
+    G_regularizer_orthstep: None
+    G_regularizer_clipstep: None
+    checkpoint_test: 5000
+    checkpoint_save: 5000
+    checkpoint_print: 200
+  ]
+  opt_path: options/train_usrnet.json
+  is_train: True
+
+21-01-03 00:21:37.489 : Random seed: 1475
+21-01-03 00:21:38.164 : Number of train images: 800, iters: 17
+21-01-03 00:21:45.441 : 
+Networks name: USRNet
+Params number: 590332
+Net structure:
+USRNet(
+  (d): DataNet()
+  (p): ResUNet(
+    (m_head): Conv2d(4, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (m_down1): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(16, 32, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_down2): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(32, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_down3): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): Conv2d(64, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+    )
+    (m_body): Sequential(
+      (0): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up3): Sequential(
+      (0): ConvTranspose2d(64, 64, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up2): Sequential(
+      (0): ConvTranspose2d(64, 32, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_up1): Sequential(
+      (0): ConvTranspose2d(32, 16, kernel_size=(2, 2), stride=(2, 2), bias=False)
+      (1): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+      (2): ResBlock(
+        (res): Sequential(
+          (0): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (1): ReLU(inplace=True)
+          (2): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+        )
+      )
+    )
+    (m_tail): Conv2d(16, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  )
+  (h): HyPaNet(
+    (mlp): Sequential(
+      (0): Conv2d(2, 32, kernel_size=(1, 1), stride=(1, 1))
+      (1): ReLU(inplace=True)
+      (2): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1))
+      (3): ReLU(inplace=True)
+      (4): Conv2d(32, 12, kernel_size=(1, 1), stride=(1, 1))
+      (5): Softplus(beta=1, threshold=20)
+    )
+  )
+)
+
+21-01-03 00:21:45.468 : 
+ |  mean  |  min   |  max   |  std   || shape               
+ | -0.001 | -0.106 |  0.114 |  0.040 | torch.Size([16, 4, 3, 3]) || p.m_head.weight
+ |  0.001 | -0.205 |  0.147 |  0.027 | torch.Size([16, 16, 3, 3]) || p.m_down1.0.res.0.weight
+ | -0.005 | -0.342 |  0.183 |  0.040 | torch.Size([16, 16, 3, 3]) || p.m_down1.0.res.2.weight
+ |  0.000 | -0.085 |  0.086 |  0.022 | torch.Size([16, 16, 3, 3]) || p.m_down1.1.res.0.weight
+ | -0.003 | -0.147 |  0.105 |  0.027 | torch.Size([16, 16, 3, 3]) || p.m_down1.1.res.2.weight
+ | -0.000 | -0.157 |  0.131 |  0.034 | torch.Size([32, 16, 2, 2]) || p.m_down1.2.weight
+ | -0.000 | -0.172 |  0.144 |  0.023 | torch.Size([32, 32, 3, 3]) || p.m_down2.0.res.0.weight
+ |  0.000 | -0.139 |  0.144 |  0.023 | torch.Size([32, 32, 3, 3]) || p.m_down2.0.res.2.weight
+ | -0.000 | -0.159 |  0.174 |  0.024 | torch.Size([32, 32, 3, 3]) || p.m_down2.1.res.0.weight
+ |  0.000 | -0.234 |  0.314 |  0.033 | torch.Size([32, 32, 3, 3]) || p.m_down2.1.res.2.weight
+ |  0.000 | -0.154 |  0.161 |  0.027 | torch.Size([64, 32, 2, 2]) || p.m_down2.2.weight
+ |  0.001 | -0.121 |  0.123 |  0.015 | torch.Size([64, 64, 3, 3]) || p.m_down3.0.res.0.weight
+ |  0.000 | -0.116 |  0.096 |  0.018 | torch.Size([64, 64, 3, 3]) || p.m_down3.0.res.2.weight
+ |  0.000 | -0.082 |  0.131 |  0.014 | torch.Size([64, 64, 3, 3]) || p.m_down3.1.res.0.weight
+ |  0.000 | -0.209 |  0.196 |  0.015 | torch.Size([64, 64, 3, 3]) || p.m_down3.1.res.2.weight
+ |  0.000 | -0.081 |  0.098 |  0.015 | torch.Size([64, 64, 2, 2]) || p.m_down3.2.weight
+ |  0.000 | -0.114 |  0.077 |  0.016 | torch.Size([64, 64, 3, 3]) || p.m_body.0.res.0.weight
+ | -0.000 | -0.138 |  0.116 |  0.017 | torch.Size([64, 64, 3, 3]) || p.m_body.0.res.2.weight
+ | -0.000 | -0.089 |  0.107 |  0.016 | torch.Size([64, 64, 3, 3]) || p.m_body.1.res.0.weight
+ |  0.000 | -0.104 |  0.141 |  0.015 | torch.Size([64, 64, 3, 3]) || p.m_body.1.res.2.weight
+ |  0.000 | -0.073 |  0.056 |  0.015 | torch.Size([64, 64, 2, 2]) || p.m_up3.0.weight
+ | -0.000 | -0.099 |  0.103 |  0.014 | torch.Size([64, 64, 3, 3]) || p.m_up3.1.res.0.weight
+ | -0.000 | -0.114 |  0.140 |  0.015 | torch.Size([64, 64, 3, 3]) || p.m_up3.1.res.2.weight
+ | -0.001 | -0.096 |  0.106 |  0.016 | torch.Size([64, 64, 3, 3]) || p.m_up3.2.res.0.weight
+ |  0.000 | -0.142 |  0.091 |  0.015 | torch.Size([64, 64, 3, 3]) || p.m_up3.2.res.2.weight
+ | -0.000 | -0.082 |  0.111 |  0.023 | torch.Size([64, 32, 2, 2]) || p.m_up2.0.weight
+ |  0.000 | -0.139 |  0.120 |  0.024 | torch.Size([32, 32, 3, 3]) || p.m_up2.1.res.0.weight
+ | -0.000 | -0.190 |  0.200 |  0.026 | torch.Size([32, 32, 3, 3]) || p.m_up2.1.res.2.weight
+ |  0.001 | -0.148 |  0.124 |  0.021 | torch.Size([32, 32, 3, 3]) || p.m_up2.2.res.0.weight
+ |  0.000 | -0.152 |  0.140 |  0.025 | torch.Size([32, 32, 3, 3]) || p.m_up2.2.res.2.weight
+ | -0.001 | -0.097 |  0.106 |  0.030 | torch.Size([32, 16, 2, 2]) || p.m_up1.0.weight
+ | -0.001 | -0.088 |  0.137 |  0.021 | torch.Size([16, 16, 3, 3]) || p.m_up1.1.res.0.weight
+ | -0.000 | -0.188 |  0.185 |  0.032 | torch.Size([16, 16, 3, 3]) || p.m_up1.1.res.2.weight
+ | -0.001 | -0.112 |  0.149 |  0.024 | torch.Size([16, 16, 3, 3]) || p.m_up1.2.res.0.weight
+ |  0.001 | -0.185 |  0.176 |  0.030 | torch.Size([16, 16, 3, 3]) || p.m_up1.2.res.2.weight
+ |  0.002 | -0.081 |  0.072 |  0.027 | torch.Size([3, 16, 3, 3]) || p.m_tail.weight
+ | -0.124 | -0.798 |  0.213 |  0.328 | torch.Size([32, 2, 1, 1]) || h.mlp.0.weight
+ |  0.060 | -0.008 |  0.174 |  0.071 | torch.Size([32]) || h.mlp.0.bias
+ |  0.030 | -0.108 |  0.372 |  0.094 | torch.Size([32, 32, 1, 1]) || h.mlp.2.weight
+ |  0.025 | -0.005 |  0.148 |  0.047 | torch.Size([32]) || h.mlp.2.bias
+ | -0.032 | -0.547 |  0.254 |  0.102 | torch.Size([12, 32, 1, 1]) || h.mlp.4.weight
+ |  0.006 | -0.330 |  0.202 |  0.142 | torch.Size([12]) || h.mlp.4.bias
+
+21-01-03 00:31:42.452 : <epoch: 12, iter:  10,200, lr:1.000e-04> G_loss: 3.493e-02 
+21-01-03 00:41:34.861 : <epoch: 24, iter:  10,400, lr:1.000e-04> G_loss: 3.558e-02 
+21-01-03 00:52:15.766 : <epoch: 37, iter:  10,600, lr:1.000e-04> G_loss: 3.122e-02 
+21-01-03 01:02:26.107 : <epoch: 49, iter:  10,800, lr:1.000e-04> G_loss: 3.816e-02 
+21-01-03 01:12:40.478 : <epoch: 62, iter:  11,000, lr:1.000e-04> G_loss: 3.063e-02 
+21-01-03 01:22:47.585 : <epoch: 74, iter:  11,200, lr:1.000e-04> G_loss: 2.699e-02 
+21-01-03 01:33:19.007 : <epoch: 87, iter:  11,400, lr:1.000e-04> G_loss: 3.084e-02 
+21-01-03 01:43:23.440 : <epoch: 99, iter:  11,600, lr:1.000e-04> G_loss: 3.024e-02 
+21-01-03 01:53:34.636 : <epoch:112, iter:  11,800, lr:1.000e-04> G_loss: 3.026e-02 
+21-01-03 02:03:56.108 : <epoch:124, iter:  12,000, lr:1.000e-04> G_loss: 3.060e-02 
+21-01-03 02:14:18.222 : <epoch:137, iter:  12,200, lr:1.000e-04> G_loss: 3.879e-02 
+21-01-03 02:24:09.514 : <epoch:149, iter:  12,400, lr:1.000e-04> G_loss: 3.088e-02 
+21-01-03 02:34:28.100 : <epoch:162, iter:  12,600, lr:1.000e-04> G_loss: 3.315e-02 
+21-01-03 02:44:56.685 : <epoch:174, iter:  12,800, lr:1.000e-04> G_loss: 3.112e-02 
+21-01-03 02:54:56.639 : <epoch:187, iter:  13,000, lr:1.000e-04> G_loss: 3.398e-02 
+21-01-03 03:05:21.081 : <epoch:199, iter:  13,200, lr:1.000e-04> G_loss: 3.078e-02 
+21-01-03 03:15:38.571 : <epoch:212, iter:  13,400, lr:1.000e-04> G_loss: 2.890e-02 
+21-01-03 03:25:51.324 : <epoch:224, iter:  13,600, lr:1.000e-04> G_loss: 2.780e-02 
+21-01-03 03:36:17.535 : <epoch:237, iter:  13,800, lr:1.000e-04> G_loss: 3.592e-02 
+21-01-03 03:46:22.265 : <epoch:249, iter:  14,000, lr:1.000e-04> G_loss: 2.993e-02 
+21-01-03 03:56:57.935 : <epoch:262, iter:  14,200, lr:1.000e-04> G_loss: 3.038e-02 
+21-01-03 04:07:22.277 : <epoch:274, iter:  14,400, lr:1.000e-04> G_loss: 3.616e-02 
+21-01-03 04:17:36.723 : <epoch:287, iter:  14,600, lr:1.000e-04> G_loss: 3.615e-02 
+21-01-03 04:27:42.402 : <epoch:299, iter:  14,800, lr:1.000e-04> G_loss: 3.437e-02 
+21-01-03 04:38:03.937 : <epoch:312, iter:  15,000, lr:1.000e-04> G_loss: 3.082e-02 
+21-01-03 04:38:03.938 : Saving the model.
+21-01-03 04:38:06.084 : ---1-->   baby.bmp | 35.42dB
+21-01-03 04:38:06.267 : ---2-->   bird.bmp | 32.48dB
+21-01-03 04:38:06.463 : ---3--> butterfly.bmp | 27.05dB
+21-01-03 04:38:06.641 : ---4-->   head.bmp | 31.15dB
+21-01-03 04:38:06.824 : ---5-->  woman.bmp | 31.42dB
+21-01-03 04:38:07.103 : <epoch:312, iter:  15,000, Average PSNR : 31.50dB
+
+21-01-03 04:48:09.679 : <epoch:324, iter:  15,200, lr:1.000e-04> G_loss: 3.485e-02 
+21-01-03 04:58:40.378 : <epoch:337, iter:  15,400, lr:1.000e-04> G_loss: 2.587e-02 
+21-01-03 05:08:35.784 : <epoch:349, iter:  15,600, lr:1.000e-04> G_loss: 2.647e-02 
+21-01-03 05:19:01.468 : <epoch:362, iter:  15,800, lr:1.000e-04> G_loss: 3.246e-02 
+21-01-03 05:29:25.511 : <epoch:374, iter:  16,000, lr:1.000e-04> G_loss: 3.418e-02 
+21-01-03 05:39:37.040 : <epoch:387, iter:  16,200, lr:1.000e-04> G_loss: 2.924e-02 
+21-01-03 05:50:04.159 : <epoch:399, iter:  16,400, lr:1.000e-04> G_loss: 2.811e-02 
+21-01-03 06:00:21.401 : <epoch:412, iter:  16,600, lr:1.000e-04> G_loss: 2.130e-02 
+21-01-03 06:10:24.405 : <epoch:424, iter:  16,800, lr:1.000e-04> G_loss: 2.743e-02 
+21-01-03 06:20:51.203 : <epoch:437, iter:  17,000, lr:1.000e-04> G_loss: 2.856e-02 
+21-01-03 06:30:56.740 : <epoch:449, iter:  17,200, lr:1.000e-04> G_loss: 3.433e-02 
+21-01-03 06:41:08.403 : <epoch:462, iter:  17,400, lr:1.000e-04> G_loss: 2.589e-02 
+21-01-03 06:51:30.631 : <epoch:474, iter:  17,600, lr:1.000e-04> G_loss: 2.942e-02 
+21-01-03 07:01:58.639 : <epoch:487, iter:  17,800, lr:1.000e-04> G_loss: 2.805e-02 
+21-01-03 07:12:04.683 : <epoch:499, iter:  18,000, lr:1.000e-04> G_loss: 2.776e-02 
+21-01-03 07:22:32.527 : <epoch:512, iter:  18,200, lr:1.000e-04> G_loss: 3.086e-02 
+21-01-03 07:32:43.820 : <epoch:524, iter:  18,400, lr:1.000e-04> G_loss: 3.077e-02 
+21-01-03 07:42:53.598 : <epoch:537, iter:  18,600, lr:1.000e-04> G_loss: 2.429e-02 
+21-01-03 07:53:09.620 : <epoch:549, iter:  18,800, lr:1.000e-04> G_loss: 2.756e-02 
+21-01-03 08:03:35.069 : <epoch:562, iter:  19,000, lr:1.000e-04> G_loss: 3.075e-02 
+21-01-03 08:13:33.933 : <epoch:574, iter:  19,200, lr:1.000e-04> G_loss: 3.245e-02 
+21-01-03 08:24:03.025 : <epoch:587, iter:  19,400, lr:1.000e-04> G_loss: 3.044e-02 
+21-01-03 08:34:15.304 : <epoch:599, iter:  19,600, lr:1.000e-04> G_loss: 2.885e-02 
+21-01-03 08:44:42.148 : <epoch:612, iter:  19,800, lr:1.000e-04> G_loss: 2.814e-02 
+21-01-03 08:54:48.148 : <epoch:624, iter:  20,000, lr:1.000e-04> G_loss: 3.370e-02 
+21-01-03 08:54:48.149 : Saving the model.
+21-01-03 08:54:49.773 : ---1-->   baby.bmp | 35.89dB
+21-01-03 08:54:49.909 : ---2-->   bird.bmp | 33.23dB
+21-01-03 08:54:50.081 : ---3--> butterfly.bmp | 27.84dB
+21-01-03 08:54:50.274 : ---4-->   head.bmp | 31.36dB
+21-01-03 08:54:50.530 : ---5-->  woman.bmp | 32.24dB
+21-01-03 08:54:50.785 : <epoch:624, iter:  20,000, Average PSNR : 32.11dB
+
+21-01-03 09:04:51.673 : <epoch:637, iter:  20,200, lr:1.000e-04> G_loss: 2.923e-02 
+21-01-03 09:14:58.809 : <epoch:649, iter:  20,400, lr:1.000e-04> G_loss: 2.589e-02 
+21-01-03 09:25:05.421 : <epoch:662, iter:  20,600, lr:1.000e-04> G_loss: 2.522e-02 
+21-01-03 09:34:44.851 : <epoch:674, iter:  20,800, lr:1.000e-04> G_loss: 2.783e-02 
+21-01-03 09:44:37.680 : <epoch:687, iter:  21,000, lr:1.000e-04> G_loss: 3.550e-02 
+21-01-03 09:54:28.073 : <epoch:699, iter:  21,200, lr:1.000e-04> G_loss: 2.692e-02 
+21-01-03 10:04:39.406 : <epoch:712, iter:  21,400, lr:1.000e-04> G_loss: 2.308e-02 
+21-01-03 10:14:46.674 : <epoch:724, iter:  21,600, lr:1.000e-04> G_loss: 2.954e-02 
+21-01-03 10:24:52.536 : <epoch:737, iter:  21,800, lr:1.000e-04> G_loss: 2.292e-02 
+21-01-03 10:34:32.589 : <epoch:749, iter:  22,000, lr:1.000e-04> G_loss: 3.049e-02 
+21-01-03 10:44:39.629 : <epoch:762, iter:  22,200, lr:1.000e-04> G_loss: 3.013e-02 
+21-01-03 10:54:42.058 : <epoch:774, iter:  22,400, lr:1.000e-04> G_loss: 2.342e-02 
+21-01-03 11:04:15.884 : <epoch:787, iter:  22,600, lr:1.000e-04> G_loss: 2.094e-02 
+21-01-03 11:13:45.199 : <epoch:799, iter:  22,800, lr:1.000e-04> G_loss: 3.058e-02 
+21-01-03 11:23:43.111 : <epoch:812, iter:  23,000, lr:1.000e-04> G_loss: 2.734e-02 
+21-01-03 11:33:25.707 : <epoch:824, iter:  23,200, lr:1.000e-04> G_loss: 2.718e-02 
+21-01-03 11:43:10.541 : <epoch:837, iter:  23,400, lr:1.000e-04> G_loss: 3.749e-02 
+21-01-03 11:53:00.827 : <epoch:849, iter:  23,600, lr:1.000e-04> G_loss: 3.212e-02 
+21-01-03 12:03:06.352 : <epoch:862, iter:  23,800, lr:1.000e-04> G_loss: 3.076e-02 
+21-01-03 12:13:03.085 : <epoch:874, iter:  24,000, lr:1.000e-04> G_loss: 2.735e-02 
+21-01-03 12:23:06.893 : <epoch:887, iter:  24,200, lr:1.000e-04> G_loss: 3.201e-02 
+21-01-03 12:33:01.480 : <epoch:899, iter:  24,400, lr:1.000e-04> G_loss: 3.129e-02 
+21-01-03 12:42:57.616 : <epoch:912, iter:  24,600, lr:1.000e-04> G_loss: 2.478e-02 
+21-01-03 12:52:44.151 : <epoch:924, iter:  24,800, lr:1.000e-04> G_loss: 2.568e-02 
+21-01-03 13:03:13.689 : <epoch:937, iter:  25,000, lr:1.000e-04> G_loss: 2.279e-02 
+21-01-03 13:03:13.690 : Saving the model.
+21-01-03 13:03:15.233 : ---1-->   baby.bmp | 36.20dB
+21-01-03 13:03:15.419 : ---2-->   bird.bmp | 33.95dB
+21-01-03 13:03:15.612 : ---3--> butterfly.bmp | 28.57dB
+21-01-03 13:03:15.779 : ---4-->   head.bmp | 31.50dB
+21-01-03 13:03:16.002 : ---5-->  woman.bmp | 32.84dB
+21-01-03 13:03:16.332 : <epoch:937, iter:  25,000, Average PSNR : 32.61dB
+
+21-01-03 13:13:17.185 : <epoch:949, iter:  25,200, lr:1.000e-04> G_loss: 2.881e-02 
+21-01-03 13:23:26.585 : <epoch:962, iter:  25,400, lr:1.000e-04> G_loss: 2.474e-02 
+21-01-03 13:33:25.484 : <epoch:974, iter:  25,600, lr:1.000e-04> G_loss: 3.043e-02 
+21-01-03 13:43:51.744 : <epoch:987, iter:  25,800, lr:1.000e-04> G_loss: 2.456e-02 
+21-01-03 13:53:41.534 : <epoch:999, iter:  26,000, lr:1.000e-04> G_loss: 3.204e-02 
+21-01-03 14:03:48.551 : <epoch:1012, iter:  26,200, lr:1.000e-04> G_loss: 2.886e-02 
+21-01-03 14:13:54.974 : <epoch:1024, iter:  26,400, lr:1.000e-04> G_loss: 3.017e-02 
+21-01-03 14:23:59.613 : <epoch:1037, iter:  26,600, lr:1.000e-04> G_loss: 2.819e-02 
+21-01-03 14:34:04.095 : <epoch:1049, iter:  26,800, lr:1.000e-04> G_loss: 2.730e-02 
+21-01-03 14:44:24.457 : <epoch:1062, iter:  27,000, lr:1.000e-04> G_loss: 2.237e-02 
+21-01-03 14:54:14.996 : <epoch:1074, iter:  27,200, lr:1.000e-04> G_loss: 2.633e-02 
+21-01-03 15:04:33.627 : <epoch:1087, iter:  27,400, lr:1.000e-04> G_loss: 2.654e-02 
+21-01-03 15:14:38.917 : <epoch:1099, iter:  27,600, lr:1.000e-04> G_loss: 3.867e-02 
+21-01-03 15:24:54.464 : <epoch:1112, iter:  27,800, lr:1.000e-04> G_loss: 2.738e-02 
+21-01-03 15:34:51.042 : <epoch:1124, iter:  28,000, lr:1.000e-04> G_loss: 2.962e-02 
+21-01-03 15:45:13.658 : <epoch:1137, iter:  28,200, lr:1.000e-04> G_loss: 3.113e-02 
+21-01-03 15:55:33.571 : <epoch:1149, iter:  28,400, lr:1.000e-04> G_loss: 2.539e-02 
+21-01-03 16:06:01.235 : <epoch:1162, iter:  28,600, lr:1.000e-04> G_loss: 2.576e-02 
+21-01-03 16:16:10.382 : <epoch:1174, iter:  28,800, lr:1.000e-04> G_loss: 2.756e-02 
+21-01-03 16:26:26.089 : <epoch:1187, iter:  29,000, lr:1.000e-04> G_loss: 3.102e-02 
+21-01-03 16:36:37.157 : <epoch:1199, iter:  29,200, lr:1.000e-04> G_loss: 2.847e-02 
+21-01-03 16:46:41.779 : <epoch:1212, iter:  29,400, lr:1.000e-04> G_loss: 3.194e-02 
+21-01-03 16:56:38.897 : <epoch:1224, iter:  29,600, lr:1.000e-04> G_loss: 3.420e-02 
+21-01-03 17:06:52.008 : <epoch:1237, iter:  29,800, lr:1.000e-04> G_loss: 2.786e-02 
+21-01-03 17:16:57.854 : <epoch:1249, iter:  30,000, lr:1.000e-04> G_loss: 2.249e-02 
+21-01-03 17:16:57.855 : Saving the model.
+21-01-03 17:16:59.575 : ---1-->   baby.bmp | 36.42dB
+21-01-03 17:16:59.785 : ---2-->   bird.bmp | 34.39dB
+21-01-03 17:16:59.899 : ---3--> butterfly.bmp | 28.99dB
+21-01-03 17:17:00.060 : ---4-->   head.bmp | 31.63dB
+21-01-03 17:17:00.244 : ---5-->  woman.bmp | 33.25dB
+21-01-03 17:17:00.463 : <epoch:1249, iter:  30,000, Average PSNR : 32.94dB
+
+21-01-03 17:27:09.402 : <epoch:1262, iter:  30,200, lr:1.000e-04> G_loss: 2.592e-02 
+21-01-03 17:37:16.074 : <epoch:1274, iter:  30,400, lr:1.000e-04> G_loss: 2.990e-02 
+21-01-03 17:47:18.460 : <epoch:1287, iter:  30,600, lr:1.000e-04> G_loss: 2.805e-02 
+21-01-03 17:57:28.395 : <epoch:1299, iter:  30,800, lr:1.000e-04> G_loss: 2.733e-02 
+21-01-03 18:07:34.214 : <epoch:1312, iter:  31,000, lr:1.000e-04> G_loss: 2.606e-02 
+21-01-03 18:17:46.156 : <epoch:1324, iter:  31,200, lr:1.000e-04> G_loss: 2.531e-02 
+21-01-03 18:28:02.627 : <epoch:1337, iter:  31,400, lr:1.000e-04> G_loss: 2.837e-02 
+21-01-03 18:38:06.748 : <epoch:1349, iter:  31,600, lr:1.000e-04> G_loss: 2.531e-02 
+21-01-03 18:48:16.281 : <epoch:1362, iter:  31,800, lr:1.000e-04> G_loss: 2.326e-02 
+21-01-03 18:58:25.981 : <epoch:1374, iter:  32,000, lr:1.000e-04> G_loss: 2.749e-02 
+21-01-03 19:08:38.359 : <epoch:1387, iter:  32,200, lr:1.000e-04> G_loss: 2.317e-02 
+21-01-03 19:18:36.357 : <epoch:1399, iter:  32,400, lr:1.000e-04> G_loss: 3.125e-02 
+21-01-03 19:28:55.243 : <epoch:1412, iter:  32,600, lr:1.000e-04> G_loss: 2.599e-02 
+21-01-03 19:38:51.083 : <epoch:1424, iter:  32,800, lr:1.000e-04> G_loss: 3.109e-02 
+21-01-03 19:49:00.013 : <epoch:1437, iter:  33,000, lr:1.000e-04> G_loss: 3.110e-02 
+21-01-03 19:59:04.008 : <epoch:1449, iter:  33,200, lr:1.000e-04> G_loss: 2.563e-02 
+21-01-03 20:09:16.103 : <epoch:1462, iter:  33,400, lr:1.000e-04> G_loss: 2.469e-02 
+21-01-03 20:19:12.826 : <epoch:1474, iter:  33,600, lr:1.000e-04> G_loss: 2.904e-02 
+21-01-03 20:29:16.293 : <epoch:1487, iter:  33,800, lr:1.000e-04> G_loss: 2.532e-02 
+21-01-03 20:39:31.651 : <epoch:1499, iter:  34,000, lr:1.000e-04> G_loss: 2.755e-02 
+21-01-03 20:49:45.791 : <epoch:1512, iter:  34,200, lr:1.000e-04> G_loss: 2.768e-02 
+21-01-03 20:59:42.291 : <epoch:1524, iter:  34,400, lr:1.000e-04> G_loss: 2.682e-02 
+21-01-03 21:09:51.220 : <epoch:1537, iter:  34,600, lr:1.000e-04> G_loss: 2.692e-02 
+21-01-03 21:19:58.781 : <epoch:1549, iter:  34,800, lr:1.000e-04> G_loss: 2.783e-02 
+21-01-03 21:30:13.596 : <epoch:1562, iter:  35,000, lr:1.000e-04> G_loss: 2.391e-02 
+21-01-03 21:30:13.597 : Saving the model.
+21-01-03 21:30:15.542 : ---1-->   baby.bmp | 36.41dB
+21-01-03 21:30:15.753 : ---2-->   bird.bmp | 34.87dB
+21-01-03 21:30:15.972 : ---3--> butterfly.bmp | 29.37dB
+21-01-03 21:30:16.243 : ---4-->   head.bmp | 31.71dB
+21-01-03 21:30:16.400 : ---5-->  woman.bmp | 33.51dB
+21-01-03 21:30:16.665 : <epoch:1562, iter:  35,000, Average PSNR : 33.17dB
+
+21-01-03 21:40:07.804 : <epoch:1574, iter:  35,200, lr:1.000e-04> G_loss: 3.086e-02 
+21-01-03 21:50:21.227 : <epoch:1587, iter:  35,400, lr:1.000e-04> G_loss: 1.973e-02 
+21-01-03 22:00:02.749 : <epoch:1599, iter:  35,600, lr:1.000e-04> G_loss: 2.599e-02 
+21-01-03 22:10:16.928 : <epoch:1612, iter:  35,800, lr:1.000e-04> G_loss: 2.611e-02 
+21-01-03 22:20:27.736 : <epoch:1624, iter:  36,000, lr:1.000e-04> G_loss: 2.455e-02 
+21-01-03 22:30:29.671 : <epoch:1637, iter:  36,200, lr:1.000e-04> G_loss: 3.027e-02 
+21-01-03 22:40:25.049 : <epoch:1649, iter:  36,400, lr:1.000e-04> G_loss: 3.174e-02 
+21-01-03 22:50:50.018 : <epoch:1662, iter:  36,600, lr:1.000e-04> G_loss: 3.152e-02 
+21-01-03 23:00:54.508 : <epoch:1674, iter:  36,800, lr:1.000e-04> G_loss: 3.214e-02 
+21-01-03 23:11:11.435 : <epoch:1687, iter:  37,000, lr:1.000e-04> G_loss: 2.404e-02 
+21-01-03 23:21:16.591 : <epoch:1699, iter:  37,200, lr:1.000e-04> G_loss: 2.201e-02 
+21-01-03 23:31:27.758 : <epoch:1712, iter:  37,400, lr:1.000e-04> G_loss: 2.971e-02 
+21-01-03 23:41:31.481 : <epoch:1724, iter:  37,600, lr:1.000e-04> G_loss: 2.804e-02 
+21-01-03 23:51:49.717 : <epoch:1737, iter:  37,800, lr:1.000e-04> G_loss: 2.541e-02 
+21-01-04 00:01:42.648 : <epoch:1749, iter:  38,000, lr:1.000e-04> G_loss: 2.627e-02 
+21-01-04 00:12:09.076 : <epoch:1762, iter:  38,200, lr:1.000e-04> G_loss: 2.582e-02 
+21-01-04 00:22:09.396 : <epoch:1774, iter:  38,400, lr:1.000e-04> G_loss: 2.787e-02 
+21-01-04 00:32:12.095 : <epoch:1787, iter:  38,600, lr:1.000e-04> G_loss: 2.494e-02 
+21-01-04 00:42:06.286 : <epoch:1799, iter:  38,800, lr:1.000e-04> G_loss: 2.721e-02 
+21-01-04 00:52:12.300 : <epoch:1812, iter:  39,000, lr:1.000e-04> G_loss: 2.902e-02 
+21-01-04 01:02:33.492 : <epoch:1824, iter:  39,200, lr:1.000e-04> G_loss: 2.741e-02 
+21-01-04 01:12:58.730 : <epoch:1837, iter:  39,400, lr:1.000e-04> G_loss: 2.598e-02 
+21-01-04 01:22:57.724 : <epoch:1849, iter:  39,600, lr:1.000e-04> G_loss: 2.813e-02 
+21-01-04 01:33:07.543 : <epoch:1862, iter:  39,800, lr:1.000e-04> G_loss: 2.748e-02 
+21-01-04 01:43:08.934 : <epoch:1874, iter:  40,000, lr:1.000e-04> G_loss: 2.374e-02 
+21-01-04 01:43:08.934 : Saving the model.
+21-01-04 01:43:10.437 : ---1-->   baby.bmp | 36.70dB
+21-01-04 01:43:10.602 : ---2-->   bird.bmp | 35.37dB
+21-01-04 01:43:11.079 : ---3--> butterfly.bmp | 29.82dB
+21-01-04 01:43:11.314 : ---4-->   head.bmp | 31.83dB
+21-01-04 01:43:11.506 : ---5-->  woman.bmp | 34.00dB
+21-01-04 01:43:11.725 : <epoch:1874, iter:  40,000, Average PSNR : 33.54dB
+
+21-01-04 01:53:14.631 : <epoch:1887, iter:  40,200, lr:1.000e-04> G_loss: 3.224e-02 
+21-01-04 02:03:13.143 : <epoch:1899, iter:  40,400, lr:1.000e-04> G_loss: 2.949e-02 
+21-01-04 02:13:27.017 : <epoch:1912, iter:  40,600, lr:1.000e-04> G_loss: 2.383e-02 
+21-01-04 02:23:40.333 : <epoch:1924, iter:  40,800, lr:1.000e-04> G_loss: 3.157e-02 
+21-01-04 02:33:59.437 : <epoch:1937, iter:  41,000, lr:1.000e-04> G_loss: 3.275e-02 
+21-01-04 02:44:01.678 : <epoch:1949, iter:  41,200, lr:1.000e-04> G_loss: 2.512e-02 
+21-01-04 02:54:14.076 : <epoch:1962, iter:  41,400, lr:1.000e-04> G_loss: 2.897e-02 
+21-01-04 03:04:24.416 : <epoch:1974, iter:  41,600, lr:1.000e-04> G_loss: 2.628e-02 
+21-01-04 03:14:44.787 : <epoch:1987, iter:  41,800, lr:1.000e-04> G_loss: 2.531e-02 
+21-01-04 03:25:11.756 : <epoch:1999, iter:  42,000, lr:1.000e-04> G_loss: 2.453e-02 
+21-01-04 03:35:25.791 : <epoch:2012, iter:  42,200, lr:1.000e-04> G_loss: 2.873e-02 
+21-01-04 03:45:21.362 : <epoch:2024, iter:  42,400, lr:1.000e-04> G_loss: 2.667e-02 
+21-01-04 03:55:40.284 : <epoch:2037, iter:  42,600, lr:1.000e-04> G_loss: 2.694e-02 
+21-01-04 04:05:39.668 : <epoch:2049, iter:  42,800, lr:1.000e-04> G_loss: 2.728e-02 
+21-01-04 04:15:44.961 : <epoch:2062, iter:  43,000, lr:1.000e-04> G_loss: 2.540e-02 
+21-01-04 04:25:43.120 : <epoch:2074, iter:  43,200, lr:1.000e-04> G_loss: 2.884e-02 
+21-01-04 04:35:59.120 : <epoch:2087, iter:  43,400, lr:1.000e-04> G_loss: 2.846e-02 
+21-01-04 04:46:12.977 : <epoch:2099, iter:  43,600, lr:1.000e-04> G_loss: 3.067e-02 
+21-01-04 04:56:47.574 : <epoch:2112, iter:  43,800, lr:1.000e-04> G_loss: 2.579e-02 
+21-01-04 05:06:42.699 : <epoch:2124, iter:  44,000, lr:1.000e-04> G_loss: 2.597e-02 
+21-01-04 05:16:51.983 : <epoch:2137, iter:  44,200, lr:1.000e-04> G_loss: 2.759e-02 
+21-01-04 05:27:01.458 : <epoch:2149, iter:  44,400, lr:1.000e-04> G_loss: 2.690e-02 
+21-01-04 05:37:11.821 : <epoch:2162, iter:  44,600, lr:1.000e-04> G_loss: 2.138e-02 
+21-01-04 05:47:07.390 : <epoch:2174, iter:  44,800, lr:1.000e-04> G_loss: 2.499e-02 
+21-01-04 05:57:08.602 : <epoch:2187, iter:  45,000, lr:1.000e-04> G_loss: 2.472e-02 
+21-01-04 05:57:08.602 : Saving the model.
+21-01-04 05:57:10.497 : ---1-->   baby.bmp | 36.82dB
+21-01-04 05:57:10.811 : ---2-->   bird.bmp | 35.65dB
+21-01-04 05:57:11.089 : ---3--> butterfly.bmp | 30.18dB
+21-01-04 05:57:11.352 : ---4-->   head.bmp | 31.86dB
+21-01-04 05:57:11.656 : ---5-->  woman.bmp | 34.24dB
+21-01-04 05:57:12.101 : <epoch:2187, iter:  45,000, Average PSNR : 33.75dB
+
+21-01-04 06:07:08.605 : <epoch:2199, iter:  45,200, lr:1.000e-04> G_loss: 2.544e-02 
+21-01-04 06:17:06.036 : <epoch:2212, iter:  45,400, lr:1.000e-04> G_loss: 2.943e-02 
+21-01-04 06:27:11.998 : <epoch:2224, iter:  45,600, lr:1.000e-04> G_loss: 2.763e-02 
+21-01-04 06:37:18.009 : <epoch:2237, iter:  45,800, lr:1.000e-04> G_loss: 2.638e-02 
+21-01-04 06:47:22.403 : <epoch:2249, iter:  46,000, lr:1.000e-04> G_loss: 2.886e-02 
+21-01-04 06:57:27.847 : <epoch:2262, iter:  46,200, lr:1.000e-04> G_loss: 2.418e-02 
+21-01-04 07:07:25.461 : <epoch:2274, iter:  46,400, lr:1.000e-04> G_loss: 3.311e-02 
+21-01-04 07:17:33.766 : <epoch:2287, iter:  46,600, lr:1.000e-04> G_loss: 2.432e-02 
+21-01-04 07:27:32.775 : <epoch:2299, iter:  46,800, lr:1.000e-04> G_loss: 3.244e-02 
+21-01-04 07:37:40.441 : <epoch:2312, iter:  47,000, lr:1.000e-04> G_loss: 2.760e-02 
+21-01-04 07:47:45.480 : <epoch:2324, iter:  47,200, lr:1.000e-04> G_loss: 3.255e-02 
+21-01-04 07:57:43.048 : <epoch:2337, iter:  47,400, lr:1.000e-04> G_loss: 2.473e-02 
+21-01-04 08:07:49.146 : <epoch:2349, iter:  47,600, lr:1.000e-04> G_loss: 2.445e-02 
+21-01-04 08:17:53.732 : <epoch:2362, iter:  47,800, lr:1.000e-04> G_loss: 2.124e-02 
+21-01-04 08:27:57.014 : <epoch:2374, iter:  48,000, lr:1.000e-04> G_loss: 2.732e-02 
+21-01-04 08:38:14.197 : <epoch:2387, iter:  48,200, lr:1.000e-04> G_loss: 2.892e-02 
+21-01-04 08:48:12.163 : <epoch:2399, iter:  48,400, lr:1.000e-04> G_loss: 2.496e-02 
+21-01-04 08:58:15.731 : <epoch:2412, iter:  48,600, lr:1.000e-04> G_loss: 3.060e-02 
+21-01-04 09:08:22.816 : <epoch:2424, iter:  48,800, lr:1.000e-04> G_loss: 2.416e-02 
+21-01-04 09:18:20.008 : <epoch:2437, iter:  49,000, lr:1.000e-04> G_loss: 2.417e-02 
+21-01-04 09:28:28.264 : <epoch:2449, iter:  49,200, lr:1.000e-04> G_loss: 2.965e-02 
+21-01-04 09:38:52.345 : <epoch:2462, iter:  49,400, lr:1.000e-04> G_loss: 3.241e-02 
+21-01-04 09:48:40.041 : <epoch:2474, iter:  49,600, lr:1.000e-04> G_loss: 3.405e-02 
+21-01-04 09:58:42.762 : <epoch:2487, iter:  49,800, lr:1.000e-04> G_loss: 1.974e-02 
+21-01-04 10:08:28.296 : <epoch:2499, iter:  50,000, lr:1.000e-04> G_loss: 2.318e-02 
+21-01-04 10:08:28.297 : Saving the model.
+21-01-04 10:08:30.134 : ---1-->   baby.bmp | 37.35dB
+21-01-04 10:08:30.327 : ---2-->   bird.bmp | 36.25dB
+21-01-04 10:08:30.459 : ---3--> butterfly.bmp | 30.85dB
+21-01-04 10:08:30.652 : ---4-->   head.bmp | 32.08dB
+21-01-04 10:08:30.822 : ---5-->  woman.bmp | 34.83dB
+21-01-04 10:08:31.092 : <epoch:2499, iter:  50,000, Average PSNR : 34.27dB
+
+21-01-04 10:18:49.657 : <epoch:2512, iter:  50,200, lr:1.000e-04> G_loss: 2.353e-02 
+21-01-04 10:28:54.235 : <epoch:2524, iter:  50,400, lr:1.000e-04> G_loss: 2.888e-02 
+21-01-04 10:39:21.681 : <epoch:2537, iter:  50,600, lr:1.000e-04> G_loss: 2.852e-02 
+21-01-04 10:49:30.314 : <epoch:2549, iter:  50,800, lr:1.000e-04> G_loss: 2.577e-02 
+21-01-04 10:59:47.260 : <epoch:2562, iter:  51,000, lr:1.000e-04> G_loss: 2.377e-02 
+21-01-04 11:09:52.087 : <epoch:2574, iter:  51,200, lr:1.000e-04> G_loss: 2.219e-02 
+21-01-04 11:20:07.030 : <epoch:2587, iter:  51,400, lr:1.000e-04> G_loss: 2.617e-02 
+21-01-04 11:30:12.912 : <epoch:2599, iter:  51,600, lr:1.000e-04> G_loss: 2.959e-02 
+21-01-04 11:40:06.537 : <epoch:2612, iter:  51,800, lr:1.000e-04> G_loss: 2.464e-02 
+21-01-04 11:50:11.666 : <epoch:2624, iter:  52,000, lr:1.000e-04> G_loss: 2.463e-02 
+21-01-04 12:00:30.797 : <epoch:2637, iter:  52,200, lr:1.000e-04> G_loss: 2.397e-02 
+21-01-04 12:10:43.734 : <epoch:2649, iter:  52,400, lr:1.000e-04> G_loss: 2.157e-02 
+21-01-04 12:20:58.108 : <epoch:2662, iter:  52,600, lr:1.000e-04> G_loss: 2.565e-02 
+21-01-04 12:31:04.654 : <epoch:2674, iter:  52,800, lr:1.000e-04> G_loss: 3.128e-02 
+21-01-04 12:41:19.781 : <epoch:2687, iter:  53,000, lr:1.000e-04> G_loss: 2.125e-02 
+21-01-04 12:51:25.654 : <epoch:2699, iter:  53,200, lr:1.000e-04> G_loss: 2.934e-02 
+21-01-04 13:01:24.547 : <epoch:2712, iter:  53,400, lr:1.000e-04> G_loss: 2.596e-02 
+21-01-04 13:11:34.385 : <epoch:2724, iter:  53,600, lr:1.000e-04> G_loss: 2.617e-02 
+21-01-04 13:21:36.746 : <epoch:2737, iter:  53,800, lr:1.000e-04> G_loss: 2.590e-02 
+21-01-04 13:31:25.100 : <epoch:2749, iter:  54,000, lr:1.000e-04> G_loss: 2.938e-02 
+21-01-04 13:41:24.435 : <epoch:2762, iter:  54,200, lr:1.000e-04> G_loss: 2.150e-02 
+21-01-04 13:51:24.991 : <epoch:2774, iter:  54,400, lr:1.000e-04> G_loss: 2.394e-02 
+21-01-04 14:01:43.713 : <epoch:2787, iter:  54,600, lr:1.000e-04> G_loss: 2.561e-02 
+21-01-04 14:11:45.874 : <epoch:2799, iter:  54,800, lr:1.000e-04> G_loss: 2.787e-02 
+21-01-04 14:21:55.283 : <epoch:2812, iter:  55,000, lr:1.000e-04> G_loss: 2.387e-02 
+21-01-04 14:21:55.284 : Saving the model.
+21-01-04 14:21:57.413 : ---1-->   baby.bmp | 37.95dB
+21-01-04 14:21:57.685 : ---2-->   bird.bmp | 36.84dB
+21-01-04 14:21:58.100 : ---3--> butterfly.bmp | 31.68dB
+21-01-04 14:21:58.366 : ---4-->   head.bmp | 32.21dB
+21-01-04 14:21:58.958 : ---5-->  woman.bmp | 35.62dB
+21-01-04 14:21:59.239 : <epoch:2812, iter:  55,000, Average PSNR : 34.86dB
+
+21-01-04 14:31:48.129 : <epoch:2824, iter:  55,200, lr:1.000e-04> G_loss: 2.428e-02 
+21-01-04 14:42:03.183 : <epoch:2837, iter:  55,400, lr:1.000e-04> G_loss: 2.755e-02 
+21-01-04 14:51:50.238 : <epoch:2849, iter:  55,600, lr:1.000e-04> G_loss: 2.674e-02 
+21-01-04 15:01:42.343 : <epoch:2862, iter:  55,800, lr:1.000e-04> G_loss: 2.187e-02 
+21-01-04 15:11:47.271 : <epoch:2874, iter:  56,000, lr:1.000e-04> G_loss: 3.081e-02 
+21-01-04 15:21:26.408 : <epoch:2887, iter:  56,200, lr:1.000e-04> G_loss: 2.226e-02 
+21-01-04 15:31:41.958 : <epoch:2899, iter:  56,400, lr:1.000e-04> G_loss: 2.671e-02 
+21-01-04 15:41:53.833 : <epoch:2912, iter:  56,600, lr:1.000e-04> G_loss: 2.508e-02 
+21-01-04 15:52:18.300 : <epoch:2924, iter:  56,800, lr:1.000e-04> G_loss: 2.435e-02 
+21-01-04 16:02:25.590 : <epoch:2937, iter:  57,000, lr:1.000e-04> G_loss: 2.339e-02 
+21-01-04 16:12:42.090 : <epoch:2949, iter:  57,200, lr:1.000e-04> G_loss: 2.343e-02 
+21-01-04 16:22:36.589 : <epoch:2962, iter:  57,400, lr:1.000e-04> G_loss: 2.618e-02 
+21-01-04 16:32:40.624 : <epoch:2974, iter:  57,600, lr:1.000e-04> G_loss: 2.863e-02 
+21-01-04 16:42:50.333 : <epoch:2987, iter:  57,800, lr:1.000e-04> G_loss: 2.270e-02 
+21-01-04 16:52:42.558 : <epoch:2999, iter:  58,000, lr:1.000e-04> G_loss: 2.645e-02 
+21-01-04 17:02:50.325 : <epoch:3012, iter:  58,200, lr:1.000e-04> G_loss: 2.539e-02 
+21-01-04 17:12:57.515 : <epoch:3024, iter:  58,400, lr:1.000e-04> G_loss: 2.791e-02 
+21-01-04 17:22:53.826 : <epoch:3037, iter:  58,600, lr:1.000e-04> G_loss: 2.969e-02 
+21-01-04 17:32:40.864 : <epoch:3049, iter:  58,800, lr:1.000e-04> G_loss: 2.460e-02 
+21-01-04 17:43:11.573 : <epoch:3062, iter:  59,000, lr:1.000e-04> G_loss: 2.800e-02 
+21-01-04 17:53:14.210 : <epoch:3074, iter:  59,200, lr:1.000e-04> G_loss: 2.963e-02 
+21-01-04 18:03:14.453 : <epoch:3087, iter:  59,400, lr:1.000e-04> G_loss: 2.520e-02 
+21-01-04 18:13:13.044 : <epoch:3099, iter:  59,600, lr:1.000e-04> G_loss: 2.550e-02 
+21-01-04 18:23:24.346 : <epoch:3112, iter:  59,800, lr:1.000e-04> G_loss: 2.058e-02 
+21-01-04 18:32:58.867 : <epoch:3124, iter:  60,000, lr:1.000e-04> G_loss: 2.819e-02 
+21-01-04 18:32:58.868 : Saving the model.
+21-01-04 18:33:00.180 : ---1-->   baby.bmp | 38.65dB
+21-01-04 18:33:00.301 : ---2-->   bird.bmp | 37.49dB
+21-01-04 18:33:00.403 : ---3--> butterfly.bmp | 32.55dB
+21-01-04 18:33:00.523 : ---4-->   head.bmp | 32.41dB
+21-01-04 18:33:00.626 : ---5-->  woman.bmp | 36.52dB
+21-01-04 18:33:00.819 : <epoch:3124, iter:  60,000, Average PSNR : 35.52dB
+
+21-01-04 18:43:12.517 : <epoch:3137, iter:  60,200, lr:1.000e-04> G_loss: 2.300e-02 
+21-01-04 18:53:33.336 : <epoch:3149, iter:  60,400, lr:1.000e-04> G_loss: 2.605e-02 
+21-01-04 19:03:35.319 : <epoch:3162, iter:  60,600, lr:1.000e-04> G_loss: 2.619e-02 
+21-01-04 19:13:47.262 : <epoch:3174, iter:  60,800, lr:1.000e-04> G_loss: 2.551e-02 
+21-01-04 19:23:51.632 : <epoch:3187, iter:  61,000, lr:1.000e-04> G_loss: 2.653e-02 
+21-01-04 19:33:57.436 : <epoch:3199, iter:  61,200, lr:1.000e-04> G_loss: 2.837e-02 
+21-01-04 19:44:09.062 : <epoch:3212, iter:  61,400, lr:1.000e-04> G_loss: 2.913e-02 
+21-01-04 19:54:05.498 : <epoch:3224, iter:  61,600, lr:1.000e-04> G_loss: 2.607e-02 
+21-01-04 20:04:10.298 : <epoch:3237, iter:  61,800, lr:1.000e-04> G_loss: 2.449e-02 
+21-01-04 20:14:07.145 : <epoch:3249, iter:  62,000, lr:1.000e-04> G_loss: 2.124e-02 
+21-01-04 20:24:23.831 : <epoch:3262, iter:  62,200, lr:1.000e-04> G_loss: 2.137e-02 
+21-01-04 20:34:25.492 : <epoch:3274, iter:  62,400, lr:1.000e-04> G_loss: 2.590e-02 
+21-01-04 20:44:39.920 : <epoch:3287, iter:  62,600, lr:1.000e-04> G_loss: 2.464e-02 
+21-01-04 20:54:32.055 : <epoch:3299, iter:  62,800, lr:1.000e-04> G_loss: 2.185e-02 
+21-01-04 21:04:32.108 : <epoch:3312, iter:  63,000, lr:1.000e-04> G_loss: 2.441e-02 
+21-01-04 21:14:07.634 : <epoch:3324, iter:  63,200, lr:1.000e-04> G_loss: 2.241e-02 
+21-01-04 21:24:07.141 : <epoch:3337, iter:  63,400, lr:1.000e-04> G_loss: 2.221e-02 
+21-01-04 21:34:06.848 : <epoch:3349, iter:  63,600, lr:1.000e-04> G_loss: 2.565e-02 
+21-01-04 21:43:59.031 : <epoch:3362, iter:  63,800, lr:1.000e-04> G_loss: 2.501e-02 
+21-01-04 21:53:43.240 : <epoch:3374, iter:  64,000, lr:1.000e-04> G_loss: 3.068e-02 
+21-01-04 22:04:00.319 : <epoch:3387, iter:  64,200, lr:1.000e-04> G_loss: 2.508e-02 
+21-01-04 22:13:56.142 : <epoch:3399, iter:  64,400, lr:1.000e-04> G_loss: 2.330e-02 
+21-01-04 22:23:52.978 : <epoch:3412, iter:  64,600, lr:1.000e-04> G_loss: 2.586e-02 
+21-01-04 22:33:45.783 : <epoch:3424, iter:  64,800, lr:1.000e-04> G_loss: 2.719e-02 
+21-01-04 22:43:53.926 : <epoch:3437, iter:  65,000, lr:1.000e-04> G_loss: 2.857e-02 
+21-01-04 22:43:53.928 : Saving the model.
+21-01-04 22:43:55.178 : ---1-->   baby.bmp | 38.67dB
+21-01-04 22:43:55.316 : ---2-->   bird.bmp | 37.46dB
+21-01-04 22:43:55.433 : ---3--> butterfly.bmp | 32.90dB
+21-01-04 22:43:55.550 : ---4-->   head.bmp | 32.59dB
+21-01-04 22:43:55.693 : ---5-->  woman.bmp | 36.91dB
+21-01-04 22:43:55.862 : <epoch:3437, iter:  65,000, Average PSNR : 35.71dB
+
+21-01-04 22:53:53.702 : <epoch:3449, iter:  65,200, lr:1.000e-04> G_loss: 2.947e-02 
+21-01-04 23:04:11.470 : <epoch:3462, iter:  65,400, lr:1.000e-04> G_loss: 2.578e-02 
+21-01-04 23:14:05.543 : <epoch:3474, iter:  65,600, lr:1.000e-04> G_loss: 3.324e-02 
+21-01-04 23:23:49.268 : <epoch:3487, iter:  65,800, lr:1.000e-04> G_loss: 2.264e-02 
+21-01-04 23:33:43.507 : <epoch:3499, iter:  66,000, lr:1.000e-04> G_loss: 2.490e-02 
+21-01-04 23:44:10.558 : <epoch:3512, iter:  66,200, lr:1.000e-04> G_loss: 2.562e-02 
+21-01-04 23:54:05.993 : <epoch:3524, iter:  66,400, lr:1.000e-04> G_loss: 2.653e-02 
+21-01-05 00:04:04.661 : <epoch:3537, iter:  66,600, lr:1.000e-04> G_loss: 2.262e-02 
+21-01-05 00:13:57.008 : <epoch:3549, iter:  66,800, lr:1.000e-04> G_loss: 2.160e-02 
+21-01-05 00:24:17.691 : <epoch:3562, iter:  67,000, lr:1.000e-04> G_loss: 2.615e-02 
+21-01-05 00:34:15.702 : <epoch:3574, iter:  67,200, lr:1.000e-04> G_loss: 2.704e-02 
+21-01-05 00:44:11.905 : <epoch:3587, iter:  67,400, lr:1.000e-04> G_loss: 2.634e-02 
+21-01-05 00:54:05.113 : <epoch:3599, iter:  67,600, lr:1.000e-04> G_loss: 3.269e-02 
+21-01-05 01:04:17.147 : <epoch:3612, iter:  67,800, lr:1.000e-04> G_loss: 2.453e-02 
+21-01-05 01:14:07.812 : <epoch:3624, iter:  68,000, lr:1.000e-04> G_loss: 3.036e-02 
+21-01-05 01:24:11.397 : <epoch:3637, iter:  68,200, lr:1.000e-04> G_loss: 1.984e-02 
+21-01-05 01:34:18.867 : <epoch:3649, iter:  68,400, lr:1.000e-04> G_loss: 2.585e-02 
+21-01-05 01:44:22.076 : <epoch:3662, iter:  68,600, lr:1.000e-04> G_loss: 2.547e-02 
+21-01-05 01:54:11.913 : <epoch:3674, iter:  68,800, lr:1.000e-04> G_loss: 2.796e-02 
+21-01-05 02:04:23.160 : <epoch:3687, iter:  69,000, lr:1.000e-04> G_loss: 2.851e-02 
+21-01-05 02:14:21.586 : <epoch:3699, iter:  69,200, lr:1.000e-04> G_loss: 2.962e-02 
+21-01-05 02:24:24.908 : <epoch:3712, iter:  69,400, lr:1.000e-04> G_loss: 2.421e-02 
+21-01-05 02:34:18.510 : <epoch:3724, iter:  69,600, lr:1.000e-04> G_loss: 2.589e-02 
+21-01-05 02:44:26.193 : <epoch:3737, iter:  69,800, lr:1.000e-04> G_loss: 2.362e-02 
+21-01-05 02:54:19.736 : <epoch:3749, iter:  70,000, lr:1.000e-04> G_loss: 2.457e-02 
+21-01-05 02:54:19.737 : Saving the model.
+21-01-05 02:54:21.505 : ---1-->   baby.bmp | 39.27dB
+21-01-05 02:54:21.892 : ---2-->   bird.bmp | 38.01dB
+21-01-05 02:54:22.031 : ---3--> butterfly.bmp | 33.56dB
+21-01-05 02:54:22.169 : ---4-->   head.bmp | 32.73dB
+21-01-05 02:54:22.323 : ---5-->  woman.bmp | 37.66dB
+21-01-05 02:54:22.472 : <epoch:3749, iter:  70,000, Average PSNR : 36.25dB
+
+21-01-05 03:04:33.794 : <epoch:3762, iter:  70,200, lr:1.000e-04> G_loss: 2.693e-02 
+21-01-05 03:14:33.849 : <epoch:3774, iter:  70,400, lr:1.000e-04> G_loss: 2.889e-02 
+21-01-05 03:24:42.423 : <epoch:3787, iter:  70,600, lr:1.000e-04> G_loss: 2.609e-02 
+21-01-05 03:34:46.842 : <epoch:3799, iter:  70,800, lr:1.000e-04> G_loss: 2.202e-02 
+21-01-05 03:44:41.624 : <epoch:3812, iter:  71,000, lr:1.000e-04> G_loss: 2.285e-02 
+21-01-05 03:54:27.146 : <epoch:3824, iter:  71,200, lr:1.000e-04> G_loss: 2.899e-02 
+21-01-05 04:04:40.329 : <epoch:3837, iter:  71,400, lr:1.000e-04> G_loss: 1.843e-02 
+21-01-05 04:14:43.046 : <epoch:3849, iter:  71,600, lr:1.000e-04> G_loss: 2.713e-02 
+21-01-05 04:24:41.949 : <epoch:3862, iter:  71,800, lr:1.000e-04> G_loss: 2.629e-02 
+21-01-05 04:34:29.984 : <epoch:3874, iter:  72,000, lr:1.000e-04> G_loss: 3.083e-02 
+21-01-05 04:44:31.812 : <epoch:3887, iter:  72,200, lr:1.000e-04> G_loss: 2.195e-02 
+21-01-05 04:54:29.649 : <epoch:3899, iter:  72,400, lr:1.000e-04> G_loss: 2.303e-02 
+21-01-05 05:04:26.414 : <epoch:3912, iter:  72,600, lr:1.000e-04> G_loss: 2.387e-02 
+21-01-05 05:14:36.544 : <epoch:3924, iter:  72,800, lr:1.000e-04> G_loss: 2.782e-02 
+21-01-05 05:24:44.818 : <epoch:3937, iter:  73,000, lr:1.000e-04> G_loss: 2.365e-02 
+21-01-05 05:34:42.221 : <epoch:3949, iter:  73,200, lr:1.000e-04> G_loss: 2.334e-02 
+21-01-05 05:44:39.044 : <epoch:3962, iter:  73,400, lr:1.000e-04> G_loss: 2.516e-02 
+21-01-05 05:54:27.293 : <epoch:3974, iter:  73,600, lr:1.000e-04> G_loss: 2.341e-02 
+21-01-05 06:04:30.255 : <epoch:3987, iter:  73,800, lr:1.000e-04> G_loss: 2.206e-02 
+21-01-05 06:14:22.427 : <epoch:3999, iter:  74,000, lr:1.000e-04> G_loss: 2.654e-02 
+21-01-05 06:24:12.764 : <epoch:4012, iter:  74,200, lr:1.000e-04> G_loss: 2.744e-02 
+21-01-05 06:34:07.697 : <epoch:4024, iter:  74,400, lr:1.000e-04> G_loss: 2.900e-02 
+21-01-05 06:44:20.383 : <epoch:4037, iter:  74,600, lr:1.000e-04> G_loss: 2.139e-02 
+21-01-05 06:54:13.429 : <epoch:4049, iter:  74,800, lr:1.000e-04> G_loss: 2.239e-02 
+21-01-05 07:04:16.452 : <epoch:4062, iter:  75,000, lr:1.000e-04> G_loss: 2.465e-02 
+21-01-05 07:04:16.452 : Saving the model.
+21-01-05 07:04:18.101 : ---1-->   baby.bmp | 40.06dB
+21-01-05 07:04:18.277 : ---2-->   bird.bmp | 38.71dB
+21-01-05 07:04:18.459 : ---3--> butterfly.bmp | 34.42dB
+21-01-05 07:04:18.591 : ---4-->   head.bmp | 33.04dB
+21-01-05 07:04:18.798 : ---5-->  woman.bmp | 38.12dB
+21-01-05 07:04:19.013 : <epoch:4062, iter:  75,000, Average PSNR : 36.87dB
+
+21-01-05 07:14:07.683 : <epoch:4074, iter:  75,200, lr:1.000e-04> G_loss: 2.484e-02 
+21-01-05 07:24:05.727 : <epoch:4087, iter:  75,400, lr:1.000e-04> G_loss: 2.503e-02 
+21-01-05 07:34:18.305 : <epoch:4099, iter:  75,600, lr:1.000e-04> G_loss: 2.611e-02 
+21-01-05 07:44:23.692 : <epoch:4112, iter:  75,800, lr:1.000e-04> G_loss: 2.719e-02 
+21-01-05 07:54:18.701 : <epoch:4124, iter:  76,000, lr:1.000e-04> G_loss: 2.390e-02 
+21-01-05 08:04:25.644 : <epoch:4137, iter:  76,200, lr:1.000e-04> G_loss: 2.507e-02 
+21-01-05 08:14:05.587 : <epoch:4149, iter:  76,400, lr:1.000e-04> G_loss: 2.364e-02 
+21-01-05 08:24:21.177 : <epoch:4162, iter:  76,600, lr:1.000e-04> G_loss: 2.035e-02 
+21-01-05 08:34:13.464 : <epoch:4174, iter:  76,800, lr:1.000e-04> G_loss: 1.895e-02 
+21-01-05 08:44:02.537 : <epoch:4187, iter:  77,000, lr:1.000e-04> G_loss: 2.677e-02 
+21-01-05 08:53:45.240 : <epoch:4199, iter:  77,200, lr:1.000e-04> G_loss: 2.282e-02 
+21-01-05 09:03:53.209 : <epoch:4212, iter:  77,400, lr:1.000e-04> G_loss: 2.654e-02 
+21-01-05 09:13:47.915 : <epoch:4224, iter:  77,600, lr:1.000e-04> G_loss: 2.453e-02 
+21-01-05 09:23:39.557 : <epoch:4237, iter:  77,800, lr:1.000e-04> G_loss: 2.050e-02 
+21-01-05 09:33:36.624 : <epoch:4249, iter:  78,000, lr:1.000e-04> G_loss: 2.396e-02 
+21-01-05 09:43:40.651 : <epoch:4262, iter:  78,200, lr:1.000e-04> G_loss: 2.392e-02 
+21-01-05 09:53:41.023 : <epoch:4274, iter:  78,400, lr:1.000e-04> G_loss: 2.419e-02 
+21-01-05 10:04:03.693 : <epoch:4287, iter:  78,600, lr:1.000e-04> G_loss: 2.330e-02 
+21-01-05 10:14:12.333 : <epoch:4299, iter:  78,800, lr:1.000e-04> G_loss: 2.701e-02 
+21-01-05 10:24:20.019 : <epoch:4312, iter:  79,000, lr:1.000e-04> G_loss: 2.133e-02 
+21-01-05 10:34:26.264 : <epoch:4324, iter:  79,200, lr:1.000e-04> G_loss: 2.591e-02 
+21-01-05 10:44:38.124 : <epoch:4337, iter:  79,400, lr:1.000e-04> G_loss: 1.823e-02 
+21-01-05 10:54:24.040 : <epoch:4349, iter:  79,600, lr:1.000e-04> G_loss: 2.448e-02 
+21-01-05 11:04:32.482 : <epoch:4362, iter:  79,800, lr:1.000e-04> G_loss: 2.322e-02 
+21-01-05 11:14:45.279 : <epoch:4374, iter:  80,000, lr:1.000e-04> G_loss: 2.645e-02 
+21-01-05 11:14:45.280 : Saving the model.
+21-01-05 11:14:46.777 : ---1-->   baby.bmp | 40.04dB
+21-01-05 11:14:47.009 : ---2-->   bird.bmp | 38.78dB
+21-01-05 11:14:47.139 : ---3--> butterfly.bmp | 34.67dB
+21-01-05 11:14:47.315 : ---4-->   head.bmp | 33.16dB
+21-01-05 11:14:47.459 : ---5-->  woman.bmp | 38.80dB
+21-01-05 11:14:47.632 : <epoch:4374, iter:  80,000, Average PSNR : 37.09dB
+
+21-01-05 11:24:54.769 : <epoch:4387, iter:  80,200, lr:1.000e-04> G_loss: 2.655e-02 
+21-01-05 11:34:34.164 : <epoch:4399, iter:  80,400, lr:1.000e-04> G_loss: 1.903e-02 
+21-01-05 11:44:26.997 : <epoch:4412, iter:  80,600, lr:1.000e-04> G_loss: 2.297e-02 
+21-01-05 11:54:24.536 : <epoch:4424, iter:  80,800, lr:1.000e-04> G_loss: 2.588e-02 
+21-01-05 12:04:27.728 : <epoch:4437, iter:  81,000, lr:1.000e-04> G_loss: 2.309e-02 
+21-01-05 12:14:00.738 : <epoch:4449, iter:  81,200, lr:1.000e-04> G_loss: 2.647e-02 
+21-01-05 12:24:07.463 : <epoch:4462, iter:  81,400, lr:1.000e-04> G_loss: 2.189e-02 
+21-01-05 12:34:02.925 : <epoch:4474, iter:  81,600, lr:1.000e-04> G_loss: 3.085e-02 
+21-01-05 12:44:08.559 : <epoch:4487, iter:  81,800, lr:1.000e-04> G_loss: 2.370e-02 
+21-01-05 12:53:53.864 : <epoch:4499, iter:  82,000, lr:1.000e-04> G_loss: 2.252e-02 
+21-01-05 13:03:44.192 : <epoch:4512, iter:  82,200, lr:1.000e-04> G_loss: 2.318e-02 
+21-01-05 13:13:29.369 : <epoch:4524, iter:  82,400, lr:1.000e-04> G_loss: 3.178e-02 
+21-01-05 13:23:30.093 : <epoch:4537, iter:  82,600, lr:1.000e-04> G_loss: 2.678e-02 
+21-01-05 13:33:31.718 : <epoch:4549, iter:  82,800, lr:1.000e-04> G_loss: 2.582e-02 
+21-01-05 13:43:30.571 : <epoch:4562, iter:  83,000, lr:1.000e-04> G_loss: 1.919e-02 
+21-01-05 13:53:18.135 : <epoch:4574, iter:  83,200, lr:1.000e-04> G_loss: 2.479e-02 
+21-01-05 14:03:35.906 : <epoch:4587, iter:  83,400, lr:1.000e-04> G_loss: 2.458e-02 
+21-01-05 14:13:25.387 : <epoch:4599, iter:  83,600, lr:1.000e-04> G_loss: 2.551e-02 
+21-01-05 14:23:30.627 : <epoch:4612, iter:  83,800, lr:1.000e-04> G_loss: 2.484e-02 
+21-01-05 14:33:35.788 : <epoch:4624, iter:  84,000, lr:1.000e-04> G_loss: 1.867e-02 
+21-01-05 14:43:41.970 : <epoch:4637, iter:  84,200, lr:1.000e-04> G_loss: 2.501e-02 
+21-01-05 14:53:35.035 : <epoch:4649, iter:  84,400, lr:1.000e-04> G_loss: 2.593e-02 
+21-01-05 15:03:33.776 : <epoch:4662, iter:  84,600, lr:1.000e-04> G_loss: 1.727e-02 
+21-01-05 15:13:35.390 : <epoch:4674, iter:  84,800, lr:1.000e-04> G_loss: 3.082e-02 
+21-01-05 15:23:38.782 : <epoch:4687, iter:  85,000, lr:1.000e-04> G_loss: 2.368e-02 
+21-01-05 15:23:38.783 : Saving the model.
+21-01-05 15:23:40.732 : ---1-->   baby.bmp | 40.05dB
+21-01-05 15:23:40.998 : ---2-->   bird.bmp | 39.06dB
+21-01-05 15:23:41.176 : ---3--> butterfly.bmp | 34.98dB
+21-01-05 15:23:41.347 : ---4-->   head.bmp | 33.05dB
+21-01-05 15:23:41.528 : ---5-->  woman.bmp | 38.67dB
+21-01-05 15:23:41.897 : <epoch:4687, iter:  85,000, Average PSNR : 37.16dB
+
+21-01-05 15:34:03.561 : <epoch:4699, iter:  85,200, lr:1.000e-04> G_loss: 2.134e-02 
+21-01-05 15:44:28.127 : <epoch:4712, iter:  85,400, lr:1.000e-04> G_loss: 2.402e-02 
+21-01-05 15:54:56.351 : <epoch:4724, iter:  85,600, lr:1.000e-04> G_loss: 2.728e-02 
+21-01-05 16:05:17.420 : <epoch:4737, iter:  85,800, lr:1.000e-04> G_loss: 2.349e-02 
+21-01-05 16:15:23.647 : <epoch:4749, iter:  86,000, lr:1.000e-04> G_loss: 3.220e-02 
+21-01-05 16:25:48.811 : <epoch:4762, iter:  86,200, lr:1.000e-04> G_loss: 2.171e-02 
+21-01-05 16:36:25.442 : <epoch:4774, iter:  86,400, lr:1.000e-04> G_loss: 2.934e-02 
+21-01-05 16:46:59.215 : <epoch:4787, iter:  86,600, lr:1.000e-04> G_loss: 2.149e-02 
+21-01-05 16:57:19.979 : <epoch:4799, iter:  86,800, lr:1.000e-04> G_loss: 2.861e-02 
+21-01-05 17:07:46.678 : <epoch:4812, iter:  87,000, lr:1.000e-04> G_loss: 2.803e-02 
+21-01-05 17:18:15.875 : <epoch:4824, iter:  87,200, lr:1.000e-04> G_loss: 2.605e-02 
+21-01-05 17:29:03.684 : <epoch:4837, iter:  87,400, lr:1.000e-04> G_loss: 2.718e-02 
+21-01-05 17:39:30.379 : <epoch:4849, iter:  87,600, lr:1.000e-04> G_loss: 3.028e-02 
+21-01-05 17:50:07.998 : <epoch:4862, iter:  87,800, lr:1.000e-04> G_loss: 1.792e-02 
+21-01-05 18:00:29.656 : <epoch:4874, iter:  88,000, lr:1.000e-04> G_loss: 2.340e-02 
+21-01-05 18:11:11.729 : <epoch:4887, iter:  88,200, lr:1.000e-04> G_loss: 2.478e-02 
+21-01-05 18:21:49.118 : <epoch:4899, iter:  88,400, lr:1.000e-04> G_loss: 2.660e-02 
+21-01-05 18:32:11.209 : <epoch:4912, iter:  88,600, lr:1.000e-04> G_loss: 2.526e-02 
+21-01-05 18:42:30.035 : <epoch:4924, iter:  88,800, lr:1.000e-04> G_loss: 2.329e-02 
+21-01-05 18:53:23.720 : <epoch:4937, iter:  89,000, lr:1.000e-04> G_loss: 2.058e-02 
+21-01-05 19:03:43.255 : <epoch:4949, iter:  89,200, lr:1.000e-04> G_loss: 3.398e-02 
+21-01-05 19:14:06.669 : <epoch:4962, iter:  89,400, lr:1.000e-04> G_loss: 2.435e-02 
+21-01-05 19:24:21.075 : <epoch:4974, iter:  89,600, lr:1.000e-04> G_loss: 2.311e-02 
+21-01-05 19:34:49.411 : <epoch:4987, iter:  89,800, lr:1.000e-04> G_loss: 2.756e-02 
+21-01-05 19:45:19.132 : <epoch:4999, iter:  90,000, lr:1.000e-04> G_loss: 2.375e-02 
+21-01-05 19:45:19.134 : Saving the model.
+21-01-05 19:45:20.871 : ---1-->   baby.bmp | 40.41dB
+21-01-05 19:45:21.334 : ---2-->   bird.bmp | 39.21dB
+21-01-05 19:45:21.539 : ---3--> butterfly.bmp | 35.19dB
+21-01-05 19:45:21.731 : ---4-->   head.bmp | 33.31dB
+21-01-05 19:45:21.823 : ---5-->  woman.bmp | 39.08dB
+21-01-05 19:45:22.065 : <epoch:4999, iter:  90,000, Average PSNR : 37.44dB
+
+21-01-05 19:45:22.456 : Saving the final model.
+21-01-05 19:45:22.470 : End of training.

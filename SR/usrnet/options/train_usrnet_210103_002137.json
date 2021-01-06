@@ -1,0 +1,96 @@
+{
+  "task": "usrnet",
+  "model": "plain4",
+  "gpu_ids": [
+    0
+  ],
+  "scale": 1,
+  "n_channels": 3,
+  "merge_bn": false,
+  "merge_bn_startpoint": 300000,
+  "datasets": {
+    "train": {
+      "name": "train_dataset",
+      "dataset_type": "usrnet",
+      "dataroot_H": "trainsets/trainH",
+      "dataroot_L": null,
+      "H_size": 96,
+      "use_flip": true,
+      "use_rot": true,
+      "scales": [
+        1
+      ],
+      "dataloader_shuffle": true,
+      "dataloader_num_workers": 8,
+      "dataloader_batch_size": 48,
+      "phase": "train",
+      "scale": 1,
+      "n_channels": 3
+    },
+    "test": {
+      "name": "test_dataset",
+      "dataset_type": "usrnet",
+      "dataroot_H": "testsets/set5",
+      "dataroot_L": null,
+      "phase": "test",
+      "scale": 1,
+      "n_channels": 3
+    }
+  },
+  "path": {
+    "root": "SR",
+    "pretrained_netG": "SR/usrnet/models/10000_G.pth",
+    "task": "SR/usrnet",
+    "log": "SR/usrnet",
+    "options": "SR/usrnet/options",
+    "models": "SR/usrnet/models",
+    "images": "SR/usrnet/images"
+  },
+  "netG": {
+    "net_type": "usrnet",
+    "n_iter": 6,
+    "h_nc": 32,
+    "in_nc": 4,
+    "out_nc": 3,
+    "nc": [
+      16,
+      32,
+      64,
+      64
+    ],
+    "nb": 2,
+    "gc": 32,
+    "ng": 2,
+    "reduction": 16,
+    "act_mode": "R",
+    "upsample_mode": "convtranspose",
+    "downsample_mode": "strideconv",
+    "init_type": "orthogonal",
+    "init_bn_type": "uniform",
+    "init_gain": 0.2,
+    "scale": 1
+  },
+  "train": {
+    "G_lossfn_type": "l1",
+    "G_lossfn_weight": 1.0,
+    "G_optimizer_type": "adam",
+    "G_optimizer_lr": 0.0001,
+    "G_optimizer_wd": 0,
+    "G_optimizer_clipgrad": null,
+    "G_scheduler_type": "MultiStepLR",
+    "G_scheduler_milestones": [
+      100000,
+      200000,
+      300000,
+      400000
+    ],
+    "G_scheduler_gamma": 0.5,
+    "G_regularizer_orthstep": null,
+    "G_regularizer_clipstep": null,
+    "checkpoint_test": 5000,
+    "checkpoint_save": 5000,
+    "checkpoint_print": 200
+  },
+  "opt_path": "options/train_usrnet.json",
+  "is_train": true
+}
